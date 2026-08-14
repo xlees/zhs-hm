@@ -1,0 +1,178 @@
+{
+    "name" : "甄慧省",
+    "appid" : "__UNI__90DE23A",
+    "description" : "一款基于deepseek、可以帮你省钱&赚钱的智能购物领券助手",
+    "versionName" : "1.0.2",
+    "versionCode" : 102,
+    "transformPx" : false,
+    /* 5+App特有相关 */
+    "app-plus" : {
+        "darkmode" : true,
+        "themeLocation" : "theme.json",
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        /* 模块配置 */
+        "modules" : {
+            "OAuth" : {},
+            "Push" : {},
+            "Share" : {}
+        },
+        /* 应用发布信息 */
+        "distribute" : {
+            /* android打包配置 */
+            "android" : {
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    // "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    // "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    // "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    // "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    // "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    // "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    // "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "minSdkVersion" : 21,
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
+                "excludePermissions" : [
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>"
+                ],
+                "targetSdkVersion" : 30
+            },
+            /* ios打包配置 */
+            "ios" : {
+                "dSYMs" : false
+            },
+            /* SDK配置 */
+            "sdkConfigs" : {
+                "oauth" : {
+                    "univerify" : {},
+                    "weixin" : {
+                        "appid" : "wx54efa376148ca52c",
+                        "UniversalLinks" : ""
+                    }
+                },
+                "push" : {
+                    "unipush" : {
+                        "version" : "2",
+                        "offline" : false
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx54efa376148ca52c",
+                        "UniversalLinks" : ""
+                    }
+                }
+            },
+            "icons" : {
+                "ios" : {
+                    "appstore" : "/Users/xl/Documents/上海众阚/甄慧省/logo.png"
+                },
+                "android" : {
+                    "hdpi" : "/Users/xl/Documents/上海众阚/荣耀市场/logos/logo-72.png",
+                    "xhdpi" : "/Users/xl/Documents/上海众阚/荣耀市场/logos/logo-96.png",
+                    "xxhdpi" : "/Users/xl/Documents/上海众阚/荣耀市场/logos/logo-144.png",
+                    "xxxhdpi" : "/Users/xl/Documents/上海众阚/荣耀市场/logos/logo-192.png"
+                }
+            },
+            "splashscreen" : {
+                "useOriginalMsgbox" : true,
+                "androidStyle" : "common"
+            }
+        }
+    },
+    /* 快应用特有相关 */
+    "quickapp" : {},
+    /* 小程序特有相关 */
+    "mp-weixin" : {
+        "appid" : "wx84bc52413480050d",
+        "setting" : {
+            "urlCheck" : true,
+            "postcss" : true,
+            "minified" : true
+        },
+        "lazyCodeLoading" : "requiredComponents",
+        "optimization" : {
+            "subPackages" : true
+        },
+        "mergeVirtualHostAttributes" : true,
+        "usingComponents" : true,
+        "unipush" : {
+            "enable" : true
+        },
+        "permission" : {}
+    },
+    // "scope.userLocation" : {
+    //     "desc" : "根据用户当前所在位置，为用户推荐附近的美食和生活服务"
+    // }
+    "mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "vueVersion" : "3",
+    "app-harmony" : {
+        "distribute" : {
+            "bundleName" : "com.hm.zhs",
+            "modules" : {
+                "uni-oauth" : {
+                    "huawei" : {
+                        "client_id" : "6917603761284601336"
+                    },
+                    "weixin" : {
+                        "appid" : "wx54efa376148ca52c"
+                    }
+                },
+                "uni-push" : {},
+                "uni-verify" : {}
+            },
+            "signingConfigs" : {
+                "default" : {
+                    "certpath" : "/Users/xl/Documents/Config/甄慧省_debug_cert.cer",
+                    "keyAlias" : "zhs",
+                    "keyPassword" : "0000001A43B2CD9D02EF941926DC464BB0617955AEE71357FE2BFE4458AD1DCF5E043409AC5B5C36540B",
+                    "profile" : "/Users/xl/Documents/Config/zhsDebug.p7b",
+                    "signAlg" : "SHA256withECDSA",
+                    "storeFile" : "/Users/xl/Documents/Config/zhs.p12",
+                    "storePassword" : "0000001A84281882A4CD50A62F32241731EB9FBB0FF5A3C5DA73CB4E926F90509A84CE96AC0F7873E36D"
+                },
+                "release" : {
+                    "certpath" : "/Users/xl/Documents/Config/甄慧省_release_cert.cer",
+                    "keyAlias" : "releaseKey",
+                    "keyPassword" : "0000001A647D91501CAA90B8733EC884CE5AB9CA8A4DD89ADB3CDB1A8BC195263586384DE19782713AF1",
+                    "profile" : "/Users/xl/Documents/Config/zhsDebug.p7b",
+                    "signAlg" : "SHA256withECDSA",
+                    "storeFile" : "/Users/xl/Documents/Config/zhs.p12",
+                    "storePassword" : "0000001A4C1D52B7B844CB4D5B2ADABCF0587753431B13889532DFC014018025D8D6244BCEC8B26F5B88"
+                }
+            },
+            "icons" : {
+                "foreground" : "/Users/xl/Documents/上海众阚/华为应用市场/logo-1024.png",
+                "background" : "/Users/xl/Documents/上海众阚/华为鸿蒙/background.png"
+            }
+        }
+    },
+    "locale" : "zh-Hans"
+}

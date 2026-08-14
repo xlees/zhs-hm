@@ -1,0 +1,276 @@
+{
+	
+	"easycom": {
+		"autoscan": true,
+		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+		"custom": {
+			"^u--(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			"^u-([^-].*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
+			
+			// 自定义组件
+			"gbScroll": "@/components/gb-scroll/gb-scroll.vue",
+			"indexList": "@/components/index/index-list.vue",
+			"uniQrcode": "@/components/uni-qrcode/uni-qrcode.vue",
+			"doubleButton": "@/components/common/double-button.vue",
+			"flexBotButtom": "@/components/common/flex-bot-buttom.vue",
+			"hTabbar": "@/components/common/h-tabbar.vue",
+			"loadingIcon": "@/components/common/loading-icon.vue",
+			"loadMore": "@/components/common/load-more.vue",
+			"mixTapButton": "@/components/common/mix-tap-button.vue",
+			"noThing": "@/components/common/no-thing.vue",
+			"popupTs": "@/components/common/popup-ts.vue",
+			"projectList": "@/components/common/project-list.vue",
+			"singleButton": "@/components/common/single-button.vue",
+			"no-thing": "@/components/common/no-thing.vue",
+			"topDec": "@/components/common/top-dec.vue"
+		}
+	},
+		
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		
+		
+		{
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "甄慧省"
+				// "navigationStyle": "custom",	//自定义导航栏
+				// "app-plus": {
+				// 	// "titleNView": false
+				// }
+			}
+		},
+		
+		{
+			"path": "pages/cps/goods-details",
+			"style": {
+				"navigationBarTitleText": "商品详情"
+				// "navigationStyle": "custom",	//自定义导航栏
+				// "app-plus": {
+				// 	"titleNView": false
+				// }
+			}
+		},
+		
+		// {
+		// 	"path": "pages/cps/cps-618",
+		// 	"style": {
+		// 		"navigationBarTitleText": "淘宝京东618重磅来袭！"
+		// 		// "navigationStyle": "custom",	//自定义导航栏
+		// 		// "app-plus": {
+		// 		// 	"titleNView": false
+		// 		// }
+		// 	}
+		// },
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		
+		{
+			"path": "pages/my/user-agreement",
+			"style": {
+				"navigationBarTitleText": "用户协议"
+			}
+		},
+		{
+			"path": "pages/my/privacy-agreement",
+			"style": {
+				"navigationBarTitleText": "隐私政策"
+			}
+		},
+		
+		{
+			"path": "pages/aichat/chat",
+			"style": {
+				"navigationBarTitleText": "Ai购物助手"
+				// "navigationStyle": "custom",	//自定义导航栏
+				// "app-plus": {
+				// 	"titleNView": false
+				// }
+			}
+		},
+		{
+			"path": "pages/cps/search-list",
+			"style": {
+				"navigationBarTitleText": "搜索商品"
+			}
+		},
+		
+		{
+			"path": "pages/cps/cps",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+				// "navigationStyle": "custom",	//自定义导航栏
+				// "app-plus": {
+				// 	"titleNView": false
+				// }
+			}
+		},
+		
+		{
+			"path": "pages/cps/cps-list",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		
+		{
+			"path": "pages/wallet/wallet",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+			}
+		},
+		{
+			"path": "pages/wallet/money-detail",
+			"style": {
+				"navigationBarTitleText": "资金明细"
+			}
+		},
+		{
+			"path": "pages/wallet/withdrawal-state",
+			"style": {
+				"navigationBarTitleText": "提现"
+			}
+		},
+		
+		// // 个人信息
+		{
+			"path": "pages/my/my-data",
+			"style": {}
+		},
+		{
+			"path": "pages/my/about-us",
+			"style": {}
+		},
+		{
+			"path": "pages/my/feedback",
+			"style": {}
+		},
+		{
+			"path": "pages/my/announcement",
+			"style": {}
+		},
+		{
+			"path": "pages/my/sys-setting",
+			"style": {}
+		}
+		
+		// {
+		// 	"path": "pages/login/first-enter",
+		// 	"style": {
+		// 		"navigationStyle": "custom"
+		// 	}
+		// }
+	],
+	"globalStyle": {
+		"pageOrientation": "portrait",
+		"navigationBarTitleText": "甄慧省",
+		"navigationBarTextStyle": "@navTxtStyle",
+		"navigationBarBackgroundColor": "@navBgColor",
+		"backgroundColor": "@bgColor",
+		"backgroundTextStyle": "@bgTxtStyle",
+		"backgroundColorTop": "@bgColorTop",
+		"backgroundColorBottom": "@bgColorBottom",
+		// "mp-360": {
+		// 	"navigationStyle": "custom"
+		// },
+		"h5": {
+			"maxWidth": 1190,
+			"navigationBarTextStyle": "black",
+			"navigationBarBackgroundColor": "#F1F1F1"
+		}
+	},
+	
+	"condition" : { 	//模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "首页", //模式名称
+				"path": "pages/home/index", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			// {
+			// 	"name": "首次进入", //模式名称
+			// 	"path": "pages/login/first-enter", //启动页面，必选
+			// 	"query": "" //启动参数，在页面的onLoad函数里面得到
+			// },
+			{
+				"name": "我的", //模式名称
+				"path": "pages/cps/cps", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "登录页面", //模式名称
+				"path": "pages/login/login", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			
+			{
+				"name": "618活动", //模式名称
+				"path": "pages/cps/cps-618", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			},
+			{
+				"name": "AI购物",
+				"path": "pages/aichat/chat&ad=1",
+				"query": ""
+			}
+			// {
+			// 	"name": "公众号次数", //模式名称
+			// 	"path": "pages/reward/reward", //启动页面，必选
+			// 	"query": "gh_openid=oWX3e6r6Qyo50DhqAymoE-WHSkPc&scnr=alice_no_login" //启动参数，在页面的onLoad函数里面得到
+			// },
+			// {
+			// 	"name": "邀请人明细", //模式名称
+			// 	"path": "sub_pkgs/ads/referal/referal", //启动页面，必选
+			// 	"query": "gh_openid=oWX3e6hNm7M_7vA5diqEbO4Z5yqc&scnr=referal" //启动参数，在页面的onLoad函数里面得到
+			// },
+			// {
+			// 	"name": "观看视频入围拆盲盒", 
+			// 	"path": "sub_pkgs/ads/reward/reward", //启动页面，必选
+			// 	"query": "gh_openid=oWX3e6r6Qyo50DhqAymoE-WHSkPc&scnr=wx_transfer&amount=10" //启动参数，在页面的onLoad函数里面得到
+			// }
+		]
+	},
+	"tabBar": {
+		// "borderStyle": "black",
+		// "backgroundColor": "#333",
+		// "color": "#8F8F94",
+		"selectedColor": "#f33e54",
+		"list": [
+			{
+				"pagePath": "pages/home/index",
+				"iconPath": "static/img/tabbar/home.png",
+				"selectedIconPath": "static/img/tabbar/homeactive.png",
+				"text": "首页"
+			},
+			
+			{
+				"pagePath": "pages/aichat/chat",
+				"iconPath": "/static/img/tabbar/aichat.png",
+				"selectedIconPath": "/static/img/tabbar/aichat_active.png",
+				"text": "AI助手"
+			},
+			
+			//#ifdef MP-WEIXIN
+			// {
+			// 	"pagePath": "pages/tabbar/tabbar-3/tabbar-3",
+			// 	"iconPath": "static/img/tabbar/add.png",
+			// 	"selectedIconPath": "static/img/tabbar/addactive.png",
+			// 	"text": "发布"
+			// },
+			//#endif
+			
+			{
+				"pagePath": "pages/cps/cps",
+				"iconPath": "static/img/tabbar/me.png",
+				"selectedIconPath": "static/img/tabbar/meactive.png",
+				"text": "我的"
+			}
+		]
+	}
+}
