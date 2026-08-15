@@ -14,10 +14,10 @@
 	export default {
 		props: {
 			loading: Boolean,
-			hasMore:Boolean
+			hasMore: Boolean
 		},
 		methods: {
-			
+
 		}
 	}
 </script>

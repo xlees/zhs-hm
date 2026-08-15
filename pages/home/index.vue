@@ -95,6 +95,7 @@
 		</view>
 
 		<!-- 电商菜单 -->
+		<u-sticky :bg-color="'rgba(255,255,255,0.96)'" :offset-top="searchBarStickyHeight">
 		<view class="ecom-menu mar-b5">
 			<!-- <u-sticky :bg-color="'#f2f'>" -->
 				<up-tabs @click="clickCatTab" :list="cats"
@@ -111,11 +112,11 @@
 					}"
 					item-style="padding-left: 15px; padding-right: 15px; height: 34px;"
 				></up-tabs>
-			<!-- </u-sticky> -->
 		</view>
+		</u-sticky>
 
 		<!-- 商品列表 -->
-		<view class="">
+		<view class="goods-list-scroll">
 			<!-- 加载图标 -->
 			<view v-if="loading && goods_list.length < 1" class="dflex justify-center align-center">
 				<image :src="config.static+'/loading.gif'" mode="widthFix" class="wh-80"></image>
@@ -186,7 +187,7 @@
 			<noThing v-if="!loading && goods_list.length < 1"></noThing>
 
 			<!-- 上拉加载 -->
-			<loadMore v-if="goods_list.length > 8" :loading="loading"></loadMore>
+			<loadMore v-if="goods_list.length > 8" :loading="loading" :hasMore="hasMore"></loadMore>
 		</view>
 
 	</view>
@@ -229,7 +230,7 @@ const title = ref('')
 const uid = ref(uniCloud.getCurrentUserInfo()?.uid || '')
 const numhotItems = ref(5)
 const isnothing = ref(true)
-const hasMore = ref(false)
+const hasMore = ref(true)
 const sourceIcon = ref(null)
 const scrollTop = ref(0)
 const current_tab = ref(0)
@@ -336,6 +337,7 @@ const menuButtonHeight = ref(0)
 const menuButtonWidth = ref(0)
 const searchBarHeight = ref(0)
 const searchBarTop = ref(0)
+const searchBarStickyHeight = ref(45)
 const searchBarWidth = ref(0)
 
 // swiper
@@ -355,10 +357,15 @@ const pageSize = ref(20)
 // 所有分享
 let allShares = null
 
-// 获取猜你喜欢商品
-const fetchGuessGoods = () => {
+const handleScrolltolower = (e) => {
+  console.log('到底了', e)
+}
 
-	uniCloud.callFunction({
+// 获取猜你喜欢商品
+
+const fetchGuessGoods = async () => {
+
+	return uniCloud.callFunction({
 		name: 'cps',
 		data: {
 			action: 'core/homeRecommend',
@@ -367,8 +374,7 @@ const fetchGuessGoods = () => {
 				page_size: pageSize.value
 			}
 		}
-	})
-	.then(res => {
+	}).then(res => {
 		console.log("\nguess goods result:\n", res)
 
 		if (res.result.length > 0) {
@@ -381,8 +387,7 @@ const fetchGuessGoods = () => {
 
 		current_tab.value = 0
 		loading.value = false
-	})
-	.catch(error => {
+	}).catch(error => {
 		console.log('请求 fetchHotGoods 错误:', error)
 	});
 
@@ -425,7 +430,7 @@ const fetchTabGoods = (tab_index: number) => {
 
 	} else {		// 分类 tab
 
-		uniCloud.callFunction({
+		return uniCloud.callFunction({
 			name: 'cps',
 			data: {
 				action: 'core/fetchCatsGoods',
@@ -435,8 +440,7 @@ const fetchTabGoods = (tab_index: number) => {
 					page_size: pageSize.value
 				}
 			}
-		})
-		.then(res => {
+		}).then(res => {
 			goods_list.value.push(...res.result)
 
 			loading.value = false
@@ -757,6 +761,16 @@ onLoad((opts: any) => {
 onReady(() => {
 	console.log("onready called")
 
+	// 使用搜索栏实际高度，保证电商菜单吸顶时位于搜索栏下方
+	uni.createSelectorQuery()
+		.select('.search-bar')
+		.boundingClientRect((rect: any) => {
+			if (rect && !Array.isArray(rect) && rect.height) {
+				searchBarStickyHeight.value = rect.height + 10
+			}
+		})
+		.exec()
+
 	// const query = uni.createSelectorQuery().in(this);
 	// console.log(query.select("ad-custom").__proto__)
 
@@ -766,20 +780,49 @@ onReady(() => {
 	// this.wxAdClickCapture()
 })
 
-// onReachBottom 生命周期
-onReachBottom(() => {
-	console.log('滑动到底部了')
+const loadMoreGoods = async () => {
+	console.log("loadMoreGoods triggered. ", loading.value, hasMore.value)
+	if (loading.value || !hasMore.value) {
+		return
+	}
 
-	hasMore.value = true
 	loading.value = true
 
 	pageId.value += 1
 
-	if (current_tab.value === 0) {
-		fetchGuessGoods()
-	} else {
-		fetchTabGoods(current_tab.value)
+	try {
+		if (current_tab.value === 0) {
+			await fetchGuessGoods()
+		} else {
+			await fetchTabGoods(current_tab.value)
+		}
+	} catch (error) {
+		console.log('加载更多商品失败:', error)
+	} finally {
+		loading.value = false
 	}
+}
+
+// 部分端在吸顶组件存在时不会稳定触发 onReachBottom，使用列表位置兜底。
+const checkGoodsListBottom = () => {
+	if (loading.value || !hasMore.value) {
+		return
+	}
+
+	uni.createSelectorQuery()
+		.select('.goods-list-scroll')
+		.boundingClientRect((rect: any) => {
+			const windowHeight = uni.getWindowInfo().windowHeight
+			if (rect && rect.bottom <= windowHeight + 40) {
+				loadMoreGoods()
+			}
+		})
+		.exec()
+}
+
+// 页面整体滚动到底部时加载下一页
+onReachBottom(() => {
+	loadMoreGoods()
 })
 
 // onPullDownRefresh 生命周期
@@ -794,7 +837,7 @@ onPullDownRefresh(() => {
 
 // onPageScroll 生命周期
 onPageScroll((e: any) => {
-	// console.log("scroll page: ", e);
+	console.log("scroll page: ", e);
 	// console.log("吸顶距离：\n",this.searchBarTop)
 
 	if (e.scrollTop > navBarHeight.value) {
@@ -809,6 +852,7 @@ onPageScroll((e: any) => {
 	}
 
 	scrollTop.value = e.scrollTop
+	checkGoodsListBottom()
 })
 
 // onUnload 生命周期
