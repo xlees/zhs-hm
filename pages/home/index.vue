@@ -1,42 +1,42 @@
 <template>
 	<view class="container">
-		
+
 		<!-- <view class="navBarBox"> -->
-			
+
 			<!-- 状态栏 -->
 			<!-- <view class="statusBar" :style="{ paddingTop: statusBarHeight+'px' }"></view> -->
-			
+
 			<!-- 真正的导航栏内容，包含微信胶囊 -->
 			<!-- <view class="navBar uni-flex uni-row" :style="{ height: navBarHeight+'px'}">
-				
+
 				<image class="image-logo" mode="widthFix" src="@/static/logo.png" />
-				
+
 				<view style="margin-left: 20rpx;">{{ title }}</view>
 			</view> -->
-			
+
 		<!-- </view> -->
-		
+
 		<!-- 搜索栏 -->
-		<u-sticky class="mar-b5 " 
-			:bg-color="'rgba(255,0,0,0.0)'" 
+		<u-sticky class="mar-b5 "
+			:bg-color="'rgba(255,0,0,0.0)'"
 			:offset-top="searchBarTop"
-			offset-left="5" 
+			offset-left="5"
 			offset-right="5">
-			
+
 			<view class="uni-flex uni-row search-bar ">
-				
-				<up-search 
+
+				<up-search
 					shape="square" placeholder="输入关键词进行搜索" v-model="keyword" :disabled="true"
-					height="35" 
+					height="35"
 					:border-color="'#888'"
 					:show-action="false"
 					@search="search"
 					@click="navSearchList"
 				/>
-				
+
 			</view>
 		</u-sticky>
-		
+
 		<!-- 热门活动区 -->
 		<view class="mar-b5">
 			<u-swiper class="hot-swiper"
@@ -48,15 +48,15 @@
 				:indicator-inactive-color="'#e6e6e6'"
 				:indicator="true"
 				:radius="10"
-				:indicator-mode="'line'" 
+				:indicator-mode="'line'"
 				:circular="true">
 			</u-swiper>
-			
+
 		</view>
 
 		<!-- 本地服务应用区 -->
 		<view class="local-life mar-b5">
-			
+
 			<up-scroll-list
 				:indicator-color="'#e6e6e6'"
 				:indicator-active-color="'#f56c6c'"
@@ -75,9 +75,9 @@
 								mode=""
 							/>
 							<text class="scroll-list__goods-item__text">{{ item.name }}</text>
-					
+
 					</view>
-					
+
 					<!-- <view
 						class="scroll-list__show-more"
 						@tap="showMore"
@@ -89,11 +89,11 @@
 							size="12"
 						></u-icon>
 					</view> -->
-					
+
 				</view>
 			</up-scroll-list>
 		</view>
-		
+
 		<!-- 电商菜单 -->
 		<view class="ecom-menu mar-b5">
 			<!-- <u-sticky :bg-color="'#f2f'>" -->
@@ -113,32 +113,32 @@
 				></up-tabs>
 			<!-- </u-sticky> -->
 		</view>
-		
+
 		<!-- 商品列表 -->
 		<view class="">
 			<!-- 加载图标 -->
 			<view v-if="loading && goods_list.length < 1" class="dflex justify-center align-center">
 				<image :src="config.static+'/loading.gif'" mode="widthFix" class="wh-80"></image>
 			</view>
-			
+
 			<view class="" v-for="(item, index) in goods_list" :key="item.goodsId">
-				
+
 				<!-- 微信原生模板广告 -->
 				<!-- <view v-if="index === 0 && (uid !== '67691dcdd121ac433df0b126' && uid !== '67b7f41a8dc8c182c3fd1ad3')"
 					@tap="wxtap"
-					@click.capture="wxAdClickCapture" 
+					@click.capture="wxAdClickCapture"
 					class="dflex flex-row align-center zcolor-while bor-r20 mar-b20 mar-t15">
 					<ad-custom id="mywxid" ref="wxad" class="wx-ad" style="width:100%;" unit-id="adunit-0ef5bbb7f19b4722" @bindclick="adWxClick" @bindload="adWxLoad" @binderror="adWxError" @bindclose="adWxClose"></ad-custom>
 				</view> -->
-				
+
 				<!-- <view v-if="index==1"
 					class="uniad-view">
 					<ad adpid="1202679606" @load="uni_onload" @close="uni_onclose" @error="uni_onerror"></ad>
 				</view> -->
-				
+
 				<view class="dflex flex-row align-center zcolor-while bor-r20 mar-b20"
 					 @click="goodsDesc(item)">
-					 
+
 					<view class="pa-10">
 						<image :src="item.goodsThumbUrl" mode="aspectFill" class="wh-200 bor-r20" />
 					</view>
@@ -158,7 +158,7 @@
 									<text class="fs-25 fcolor-red f-w">{{ item.discount }}元</text>
 								</view>
 							</view>
-							
+
 							<text v-if="item.sales_tip" class="fs-18 fcolor-dark1 mar-l10 mar-10">|</text>
 							<view v-if="item.sales_tip" class="justify-center align-center">
 								<text class="fs-25 fcolor-dark1">已售：</text>
@@ -181,21 +181,21 @@
 					</view>
 				</view>
 			</view>
-			
+
 			<!-- 没有 -->
 			<noThing v-if="!loading && goods_list.length < 1"></noThing>
-			
+
 			<!-- 上拉加载 -->
 			<loadMore v-if="goods_list.length > 8" :loading="loading"></loadMore>
 		</view>
-	
+
 	</view>
-	
+
 </template>
 
 <script setup lang="ts">
 	import { ref,computed } from 'vue'
-	
+
 	import {
 	  onReady,
 	  onLoad,
@@ -205,15 +205,15 @@
 	  onPullDownRefresh,
 	  onBackPress
 	} from '@dcloudio/uni-app'
-	
+
 	import {
 	  onShareAppMessage,
 	  onShareTimeline
 	} from '@dcloudio/uni-app'
-	
+
 	import { openSchema, canOpenURL } from '@/uni_modules/uts-openSchema'
 	import config from '@/config.js'
-	
+
 	// import { storeUserAuth } from '@/store/user-auth'
 	// import { storeTxSdk } from '@/store/ad-track.js'
 	import Common from '@/common/common'
@@ -274,7 +274,7 @@ const cats = ref<CatItem[]>([
 			'taobao': 1
 		}
 		// name: '猜你喜欢'
-	}, 
+	},
 	{
 		cat_id: 100,
 		name: '美妆',
@@ -286,7 +286,7 @@ const cats = ref<CatItem[]>([
 		badge: {
 			isDot: true
 		}
-	}, 
+	},
 	{
 		cat_id: 101,
 		name: '母婴',
@@ -295,7 +295,7 @@ const cats = ref<CatItem[]>([
 			// 'pdd': 1,
 			'taobao': 4
 		}
-	}, 
+	},
 	{
 		cat_id: 102,
 		name: '数码',
@@ -307,12 +307,12 @@ const cats = ref<CatItem[]>([
 		// badge: {
 		// 	value: 5,
 		// }
-	}, 
+	},
 	{
 		cat_id: 107,
 		name: '健康',
 	},
-	
+
 	{
 		cat_id: 105,
 		name: '家居',
@@ -357,35 +357,35 @@ let allShares = null
 
 // 获取猜你喜欢商品
 const fetchGuessGoods = () => {
-	
+
 	uniCloud.callFunction({
 		name: 'cps',
 		data: {
 			action: 'core/homeRecommend',
 			data: {
-				page_id: pageId,
-				page_size: pageSize
+				page_id: pageId.value,
+				page_size: pageSize.value
 			}
 		}
 	})
 	.then(res => {
 		console.log("\nguess goods result:\n", res)
-		
+
 		if (res.result.length > 0) {
 			console.log("猜你喜欢&为你推荐结果:", res.result[0])
-			
+
 			goods_list.value.push(...res.result)
 		} else {
 			console.log("猜你喜欢&为你推荐结果错误:", res)
 		}
-		
+
 		current_tab.value = 0
 		loading.value = false
 	})
 	.catch(error => {
 		console.log('请求 fetchHotGoods 错误:', error)
 	});
-	
+
 }
 
 // 获取热门商品
@@ -399,15 +399,15 @@ const fetchHotGoods = () => {
 	})
 	.then(res => {
 		console.log("fetchHotGoods:", res.result)
-		
+
 		if (res.result.data.length > numhotItems.value) {
 			hotGoods.value.push(...res.result.data.slice(0, 5))
-			
+
 			console.log("hotGoods:", hotGoods.value)
-			
+
 			numhotItems.value = hotGoods.value.length
 		}
-		
+
 		console.log("获取到", res.result.data.length, '条商品数据')
 	})
 	.catch(error => {
@@ -418,13 +418,13 @@ const fetchHotGoods = () => {
 // 获取分类商品
 const fetchTabGoods = (tab_index: number) => {
 	console.log("\n获取第", tab_index, " 个tab的商品列表...")
-	
+
 	if (tab_index === 0) {		// 猜你喜欢
-	
+
 		fetchGuessGoods()
-		
+
 	} else {		// 分类 tab
-	
+
 		uniCloud.callFunction({
 			name: 'cps',
 			data: {
@@ -438,31 +438,31 @@ const fetchTabGoods = (tab_index: number) => {
 		})
 		.then(res => {
 			goods_list.value.push(...res.result)
-			
+
 			loading.value = false
 		})
-		
+
 	}
 }
 
 // 点击分类 tab
 const clickCatTab = (tab: any) => {
 	console.log("click tab:", tab)
-	
+
 	let tab_index = tab.index
 	console.log("\n获取第", tab.index, " 个tab的商品列表...")
-	
+
 	loading.value = true
 	if (tab.index !== current_tab.value) {
 		goods_list.value.length = 0
 	}
-	
+
 	if (tab_index === 0) {		// 猜你喜欢
-	
+
 		fetchGuessGoods()
-		
+
 	} else {		// 分类 tab
-	
+
 		uniCloud.callFunction({
 			name: 'cps',
 			data: {
@@ -476,24 +476,24 @@ const clickCatTab = (tab: any) => {
 		})
 		.then(res => {
 			goods_list.value.push(...res.result)
-			
+
 			current_tab.value = tab.index
 			loading.value = false
-			
+
 			if ('badge' in cats.value[current_tab.value] && 'isDot' in cats.value[current_tab.value].badge) {
 				cats.value[current_tab.value].badge.isDot = false
 			}
 		})
-		
+
 	}
-	
-	
-	
+
+
+
 }
 
 // 获取容器尺寸
 const getContainerRect = () => {
-	
+
 	uni.createSelectorQuery()
 		.select('.container')
 		.boundingClientRect(res => {
@@ -507,7 +507,7 @@ const getContainerRect = () => {
 // 点击商品
 const goodsDesc = (item: any) => {
 	console.log('click item:', item)
-	
+
 	// 广告转化上报
 	// Api.cloudHttp({
 	// 	name: 'ads',
@@ -521,10 +521,35 @@ const goodsDesc = (item: any) => {
 	// 	console.log("上报结果:", res)
 	// })
 
-	
-	uni.navigateTo({
-		url: '/pages/cps/goods-details?goodsId=' + item.goodsId + '&source=' + item.source
-	})
+	if (item.source === 'tb' || item.source ==="taobao") {
+
+		// 点击直接拉起淘宝app
+		uniCloud.callFunction({
+			name: 'cps',
+			data: {
+				action: 'mix/queryTbGoods',
+				data: {
+					goodsId: item.goodsId
+				}
+			}
+		})
+		.then((goodsRs) => {
+
+			console.log("\ntaobao goods link result: \n", goodsRs.result)
+
+			const click_url = goodsRs.result.data.click_url
+			const dplink = `tbopen://m.taobao.com/tbopen/index.html?action=ali.open.nav&module=h5&bc_fl_src=tunion_mm_mm&h5Url=${encodeURIComponent(click_url)}`
+
+			openSchema(dplink)
+		})
+
+	}
+	else {
+
+		uni.navigateTo({
+			url: '/pages/cps/goods-details?goodsId=' + item.goodsId + '&source=' + item.source
+		})
+	}
 }
 
 // 搜索
@@ -537,19 +562,19 @@ const search = (e: any) => {
 
 // 点击搜索
 const navSearchList = () => {
-	
+
 	uni.navigateTo({
 		url: '/pages/cps/search-list'
 	})
-	
+
 }
 
 // 点击轮播
 const clickSwiper = (index: number) => {
 	console.log('swiper click', index, ' item: ', hotGoods.value[index])
-	
+
 	goodsDesc(hotGoods.value[index])
-	
+
 	trackClickEvent({
 		type: 'hots',
 		index: index,
@@ -561,25 +586,25 @@ const clickSwiper = (index: number) => {
 const navToApp = (app: any) => {
 	console.log("\n#click local-life app: ", app)
 	console.log('\n#current os: ', plus.os.name)
-	
+
 	// trackClickEvent({
 	// 	type: 'locals',
 	// 	app: app,
 	// });
-	
-	let sweixin = null;  
+
+	let sweixin = null;
 	for(let i=0; i<allShares.length; i++){
-		var t = allShares[i];  
-		
-		if(t.id == 'weixin'){  
-			sweixin = t;  
-		}  
-	}  
-	
+		var t = allShares[i];
+
+		if(t.id == 'weixin'){
+			sweixin = t;
+		}
+	}
+
 	if (sweixin) {
-		
+
 		if (plus.os.name=='Android' && app.android_dplink) {
-			
+
 			// plus.runtime.launchApplication(
 			// 	{
 			// 		pname: app.android_pkg,
@@ -589,9 +614,9 @@ const navToApp = (app: any) => {
 			// 	  console.error('拉起失败', error)
 			// 	}
 			// );
-			
+
 			openSchema(app.android_dplink)
-			
+
 		}
 		else {
 			sweixin.launchMiniProgram({
@@ -600,13 +625,13 @@ const navToApp = (app: any) => {
 				type: 0,
 			})
 		}
-		
+
 	} else {
-		
+
 		plus.nativeUI.alert('当前环境不支持微信操作!');
 	}
-	
-		
+
+
 	// uni.navigateToMiniProgram({
 	// 	appId: app.appid,
 	// 	path: app.path,
@@ -622,15 +647,15 @@ const navToApp = (app: any) => {
 // 点击事件上报
 const trackClickEvent = async (pos: any) => {
 	// let sdk = store_TxSdk.DNSDK;
-	
+
 	const pages = getCurrentPages();
 	console.log("pages:", pages)
-	
+
 	let prePage = ''
 	if (pages.length > 1) {
 		prePage = pages[pages.length - 2].route
 	}
-	
+
 	// let reportRs = await Api.cloudHttp({
 	// 	name: 'tracking',
 	// 	data: {
@@ -645,7 +670,7 @@ const trackClickEvent = async (pos: any) => {
 	// 	}
 	// })
 	// console.log("点击上报结果:", reportRs.result)
-	
+
 	// 广告转化回传
 	// Api.cloudHttp({
 	// 	name: 'ads',
@@ -667,50 +692,50 @@ const trackClickEvent = async (pos: any) => {
 // onLoad 生命周期
 onLoad((opts: any) => {
 	console.log("\nonload opts:\n", opts)
-	
+
 	// this.getContainerRect()
-	
+
 	// 获取分享服务
 	plus.share.getServices(function(obj){
 		allShares = obj;
-		
+
 		console.log('\n#微信分享对象: ', allShares)
-		
+
 	}, function(err){
-		
+
 		alert("获取分享服务列表失败： "+JSON.stringify(err));
 	});
-	
+
 	// 手机状态栏的高度
 	statusBarHeight.value = uni.getWindowInfo()['statusBarHeight'];
-	
+
 	console.log("状态栏高度:", statusBarHeight.value);
-				
+
 	// 微信菜单栏的高度与宽度
 	// let custom = uni.getMenuButtonBoundingClientRect();
 	// console.log("微信胶囊大小:", custom)
-	
+
 	// // 导航栏高度 (标题栏高度) = 胶囊高度 + (顶部距离 - 状态栏高度) * 2
 	// navBarHeight.value = custom.height + (custom.top - statusBarHeight.value) * 2
-	
+
 	// console.log("导航栏高度：" + navBarHeight.value)
-	
+
 	// // 胶囊高度
 	// menuButtonHeight.value = custom.height
 	// menuButtonWidth.value = custom.width
-	
+
 	searchBarHeight.value = 30
 	// searchBarTop.value = statusBarHeight.value + (navBarHeight.value - menuButtonHeight.value)/2 - 1
 	// console.log("\n搜索栏 top:", searchBarTop.value)
-	
+
 	// 获取热门商品
 	fetchHotGoods()
-	
+
 	// 获取猜你喜欢商品
 	fetchGuessGoods()
-	
+
 	// console.log("store:", store_userAuth, store_userAuth.is_login)
-	
+
 	// 实验区
 	// let res = await uniCloud.callFunction({
 	// 	name: 'cps',
@@ -731,25 +756,25 @@ onLoad((opts: any) => {
 // onReady 生命周期
 onReady(() => {
 	console.log("onready called")
-	
+
 	// const query = uni.createSelectorQuery().in(this);
 	// console.log(query.select("ad-custom").__proto__)
-	
+
 	// const adComponent = this.selectComponent('#mywxid');
 	// console.log("unit-id:", adComponent);
-	
+
 	// this.wxAdClickCapture()
 })
 
 // onReachBottom 生命周期
 onReachBottom(() => {
 	console.log('滑动到底部了')
-	
+
 	hasMore.value = true
 	loading.value = true
 
 	pageId.value += 1
-	
+
 	if (current_tab.value === 0) {
 		fetchGuessGoods()
 	} else {
@@ -761,7 +786,7 @@ onReachBottom(() => {
 onPullDownRefresh(() => {
 	loading.value = true
 	isnothing.value = false
-	
+
 	setTimeout(() => {
 		uni.stopPullDownRefresh()
 	}, 1000)
@@ -771,18 +796,18 @@ onPullDownRefresh(() => {
 onPageScroll((e: any) => {
 	// console.log("scroll page: ", e);
 	// console.log("吸顶距离：\n",this.searchBarTop)
-	
+
 	if (e.scrollTop > navBarHeight.value) {
 		// 搜索栏高度不变
 		searchBarHeight.value = menuButtonHeight.value
 		// 搜索栏宽度发生变化
 		searchBarWidth.value = containerWidth.value - menuButtonWidth.value - 12
 	}
-	
+
 	if (e.scrollTop === 0) {
 		searchBarWidth.value = containerWidth.value - 8;
 	}
-	
+
 	scrollTop.value = e.scrollTop
 })
 
@@ -802,42 +827,42 @@ onShareAppMessage(() => {
 
 // onShareAppMessage(() => {
 // 	// console.log('onShareAppMessage options:', arguments[0]);
-	
+
 // 	let shareObj = {
 // 		title: config.value.mp_name + ', 真的会省！', // 默认是小程序的名称 (可以写 slogan 等)
 // 		path: '/pages/home/index', // 默认是当前页面，必须是以'/'开头的完整路径
 // 		imageUrl: config.value.static + '/home-loading.png',
 // 		success(res: any) {
 // 			console.log(uniCloud.getCurrentUserInfo()?.uid, '转发成功！', res)
-			
+
 // 			if (res.errMsg === 'shareAppMessage:ok') {
 // 				console.log(uniCloud.getCurrentUserInfo()?.uid, '转发成功！', res)
 // 			}
 // 		},
 // 		fail(res: any) {
 // 			console.log(uniCloud.getCurrentUserInfo()?.uid, '转发失败！', res)
-			
+
 // 			// 转发失败之后的回调
 // 			if (res.errMsg === 'shareAppMessage:fail cancel') {
 // 				// 用户取消转发
 // 				console.log(uniCloud.getCurrentUserInfo()?.uid, '取消转发！', res)
-				
+
 // 			} else if (res.errMsg === 'shareAppMessage:fail') {
 // 				// 转发失败，其中 detail message 为详细失败信息
 // 				console.log(uniCloud.getCurrentUserInfo()?.uid, '转发失败！', res)
 // 			}
 // 		},
 // 		complete(res: any) {
-// 			// 
+// 			//
 // 			console.log(uniCloud.getCurrentUserInfo()?.uid, '转发完成！', res)
 // 		}
 // 	}
-	
+
 // 	// 来自哪里的转发：menu/button
 // 	// if (arguments[0].from === 'button') {
 // 	// 	// let eData = arguments[0].target.dataset;
 // 	// 	// console.log(eData.id); // shareBtn
-		
+
 // 	// 	shareObj.path = '/pages/home/index'
 // 	// }
 
@@ -847,7 +872,7 @@ onShareAppMessage(() => {
 onShareTimeline(() => {
 	return {
 		title: config.value.mp_name + ', 真的会省！', // 默认是小程序的名称
-		imageUrl: config.value.static + '/home-loading.png', 
+		imageUrl: config.value.static + '/home-loading.png',
 		success(res: any) {
 			// 分享成功
 			if (res.errMsg === 'shareAppMessage:ok') {
@@ -865,7 +890,7 @@ onShareTimeline(() => {
 			}
 		},
 		complete(res: any) {
-			// 
+			//
 		}
 	}
 })
@@ -881,32 +906,32 @@ const adWxClick = (e: any) => {
 
 // 微信原生模板广告
 const adWxLoad = (e: any) => {
-	
+
 	console.log("wx custom ad load.")
-	
-	
+
+
 }
 
 const adWxError = () => {
 }
 
 const adWxClose = (e: any) => {
-	
+
 }
 
 // 用户点击了广告
 const wxAdClickCapture = (e: any) => {
 	// const store_TxSdk = storeTxSdk()
-	
+
 	// let sdk = store_TxSdk.DNSDK;
-	
+
 	// console.log("wx ad click capture:", e)
-	
+
 	// const query = uni.createSelectorQuery().in(this);
 	// console.log(query.select("ad-custom").__proto__)
-	
+
 	// let tstamp = new Date().getTime()
-	
+
 	// Api.cloudHttp({
 	// 	name: 'ads',
 	// 	data: {
@@ -920,7 +945,7 @@ const wxAdClickCapture = (e: any) => {
 	// 			click_time: tstamp
 	// 		}
 	// 	}
-		
+
 	// }).then(res => {
 	// 	console.log("openid:", sdk.openid, " ", tstamp, "上报结果:", res);
 	// })
@@ -968,7 +993,7 @@ onBackPress(() => {
 	// height: 100%;
 	// line-height: 100%;
 	// text-align: center;
-	
+
 }
 
 .hot-swiper {
@@ -1024,7 +1049,7 @@ onBackPress(() => {
 	/* #ifndef APP-NVUE */
 	display: flex;
 	/* #endif */
-	
+
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
@@ -1032,16 +1057,16 @@ onBackPress(() => {
 }
 
 .local-life {
-	
+
 	border-radius: 20rpx;
 	background-color: white;
 	margin-top: 10rpx;
 	padding: 10rpx;
-	
+
 	&__content {
 		@include flex(column);
 	}
-	
+
 	// &__title {
 	// 	font-size: 14px;
 	// 	color: rgb(143, 156, 162);
@@ -1089,7 +1114,7 @@ onBackPress(() => {
 
 .scroll-list {
 	@include flex(column);
-	
+
 	padding: 0rpx;
 
 	&__goods-item {
@@ -1110,7 +1135,7 @@ onBackPress(() => {
 			margin-top: 5px;
 		}
 	}
-	
+
 	// &__indicator {
 	// 	background-color: #f56c6c;
 	// 	margin: 0rpx;
@@ -1160,18 +1185,18 @@ onBackPress(() => {
 }
 
 .u-scroll-list {
-	
+
 	&__indicator {
 		@include flex;
 		justify-content: center;
 		margin-top: 5px;
-	
+
 		&__line {
 			width: 60px;
 			height: 4px;
 			border-radius: 100px;
 			overflow: hidden;
-	
+
 			&__bar {
 				width: 20px;
 				height: 4px;
