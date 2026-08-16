@@ -22,22 +22,22 @@
 				<view class="pa-30 dflex justify-center align-center flex-column wh-w720 ">
 
 					<!-- #ifdef APP -->
-					
+
 					<view class="dflex flex-row align-center justify-center wh-h130 mar-t60">
 						<view class="zcolor-black dflex flex-row align-center justify-center  bor-r100"
 							style="height: 100rpx; width: 500rpx;"  @click="wxLogin">
 							<text class="fs-30 fcolor-while f-w">微信登录</text>
 						</view>
 					</view>
-					
 
-					<view class="dflex flex-row align-center justify-center wh-h130 ">
+
+					<!-- <view class="dflex flex-row align-center justify-center wh-h130 ">
 						<view class="zcolor-black dflex flex-row align-center justify-center  bor-r100"
 							style="height: 100rpx; width: 500rpx;"  @click="loginUniverify">
-							<!-- <image src="@/static/avatar.png" mode="widthFix" class="wh-30 mar-r15"></image> -->
 							<text class="fs-30 fcolor-while f-w">手机号一键登录/注册</text>
 						</view>
-					</view>
+					</view> -->
+
 					<!-- #endif -->
 
 				<!-- <view class=" zcolor-black dflex align-center justify-center mar-t25 mar-b30 bor-r100"
@@ -127,7 +127,7 @@ import {
 	  onReachBottom,
 	  onPageScroll
 	} from '@dcloudio/uni-app'
-	
+
 import Common from '@/common/common'
 import Api from "@/common/api.ts"
 import { useUserAuthStore } from "@/store/user-auth"
@@ -284,19 +284,19 @@ const getWeixinCode = () => {
 		Common.showToast('请阅读并同意用户/隐私协议')
 		return;
 	};
-	
+
 	// weixinAuthService.authorize((res: any) => {
 	// 	// 这里拿到的是 code，不是 access_token！
 	// 	const code = res.code
 	// 	console.log('微信授权code:', code)
-		
+
 	// 	// 将 code 发送到云端
 	// 	// this.loginToUniCloud(code)
-		  
+
 	// 	}, (err) => {
 	// 	  console.error('微信授权失败:', err)
 	// })
-	
+
 }
 
 // 设置信息
@@ -343,9 +343,9 @@ const updateWxUserInfo = async () => {
 		userinfo.value = uni.getStorageSync("userinfo")
 		// userinfo.value.avatar = getAvatarUrl.value
 		// userinfo.value.nickname = nickname.value
-		
+
 		// uni.setStorageSync('userinfo', userinfo.value)
-		
+
 		store_userAuth.userinfo = userinfo.value
 
 		isShow1.value = false
@@ -363,56 +363,56 @@ const updateWxUserInfo = async () => {
 // 微信授权登陆
 const wxLogin = async () => {
 	console.log('\nweixin login...\n', weixinAuthService)
-	
+
 	if (isxs.value !== 1) {
 		uni.vibrateLong();
 		Common.showToast('请阅读并同意用户/隐私协议')
 		return;
 	};
-	
+
 	// 获取微信昵称和头像
 	// const wxUserInfo = await uni.getUserInfo({
 	// 	provider: 'weixin',
 	// })
 	// console.log("\nwxUserInfo: \n", wxUserInfo)
-	
+
 	// oauth授权登录
 	weixinAuthService.authorize((res: any) => {
 		// 这里拿到的是 code，不是 access_token！
 		const code = res.code
 		console.log('微信授权code:', code)
-		
+
 		store_userAuth.wxAppLogin(code).then((res: any) => {
 			console.log("\nstore_userAuth: \n", store_userAuth.$state)
-			
+
 			uni.hideLoading();
-			
+
 			uni.showToast({
 				title: "登录成功！",
 				icon: 'none',
 				position: 'bottom',
 				duration: 2000
 			})
-			
+
 			if (back_url.value) {
 				console.log("回调地址：\n", back_url.value)
-			
+
 				uni.redirectTo({
 					url: decodeURIComponent(back_url.value)
 				})
-			
+
 			} else {
 				uni.reLaunch({
 					url: '/pages/home/index'
 				})
 			}
 		})
-	  
+
 	}, (err: any) => {
 		console.error('微信授权失败:', err)
 	})
-	
-	
+
+
 
 }
 
@@ -428,13 +428,13 @@ const onLogin = async () => {
 		Common.showToast('请阅读并同意用户/隐私协议')
 		return;
 	};
-	
+
 	//获取用户信息 （头像和名称）
 	const userProfile = await uni.getUserProfile({
 		desc: "用于识别用户",
 		lang: "zh_CN",
 	});
-	
+
 	console.log('userProfile: ', userProfile);
 	if (userProfile) {
 		//调用微信登录接口获取临时 code
@@ -672,7 +672,7 @@ const onLogin = async () => {
 // 	var androidosv =  info.osAndroidAPILevel || 33
 // 	let imei = info.imei || ''
 // 	let oaid = info.oaid || ''
-	
+
 // 	nns.value = 1
 // 	if (androidosv >= 29) {
 // 		oaid.value = oaid
@@ -778,7 +778,7 @@ const login = async () => {
 		uni.setStorageSync('uni_id_token', res.result.token);
 		uni.setStorageSync('uni_id_token_expired', res.result.tokenExpired);
 		uni.setStorageSync('login_data', data);
-		
+
 		// console.log(res.result.userInfo)
 
 		store_userAuth.token = res.result.token
@@ -791,19 +791,19 @@ const login = async () => {
 		uni.reLaunch({
 			url: '/pages/home/index'
 		})
-		
+
 	} catch (e: any) {
 		console.log(e)
-		
+
 		noClick.value = true
-		
+
 		// Common.showToast(e.result.message)
 	}
 }
 
 // 所有运营商手机号一键登录
 const loginUniverify = () => {
-	
+
 	if (isxs.value !== 1) {
 		uni.vibrateLong();
 		Common.showToast('请阅读并同意用户/隐私协议')
@@ -859,14 +859,14 @@ const loginUniverify = () => {
 			uni.closeAuthView()
 		}
 	}
-	
+
 	Common.loginUniverify(data)
 }
 
 // 执行登入请求
 const login_sms = async (data: any) => {
 	console.log('--------------执行: login_sms')
-	
+
 	if (inviteCode.value) {
 		data.inviteCode = inviteCode.value || ''
 	}
@@ -883,7 +883,7 @@ const login_sms = async (data: any) => {
 	try {
 		let res = await Api.cloudHttp(obj)
 		console.info('\n#登录结果:\n', res)
-		
+
 		if (res.result.code !== 0) {
 			uni.hideLoading();
 			Common.showToast(res.result.message)
@@ -896,54 +896,54 @@ const login_sms = async (data: any) => {
 			Common.showToast('账号已禁用')
 			return;
 		};
-		
+
 		uni.setStorageSync('uni_id_token', res.result.token);
 		uni.setStorageSync('uni_id_token_expired', res.result.tokenExpired);
 		uni.setStorageSync('userinfo', res.result.userInfo)
 		uni.setStorageSync('uid', res.result.uid)
 		uni.setStorageSync('avatar', res.result.userInfo.avatar)
 		uni.setStorageSync('nickname', res.result.userInfo.nickname)
-		
-		
+
+
 		res.result.userInfo._id = userid
 		res.result.userInfo.deviceid = res.result.deviceid
 		console.log(res.result.userInfo._id)
-		
+
 		store_userAuth.token = res.result.token
 		store_userAuth.token_expired = res.result.tokenExpired
 		store_userAuth.uid = res.result.uid
 		store_userAuth.userinfo = res.result.userInfo
 		store_userAuth.avatar = res.result.userInfo.avatar
 		store_userAuth.nickname = res.result.userInfo.nickname
-		
+
 		// 判断是否登录
 		// store_userAuth.$state.token = res.result.token
-		
+
 		// store_userAuth.updateUserInfo(res.result.userInfo)
-		
+
 		uni.hideLoading();
-		
+
 		// 登录成功，res 中包含 token 等信息，需传给自己的服务器进行验证和登录
 		uni.showToast({
 			title: '登录成功',
 			icon: 'success'
 		});
-		
+
 		let jump_url = '/pages/home/index'
 		if (back_url.value) {
 			jump_url = decodeURIComponent(back_url.value)
-			
+
 			if (url_paras.value) {
 				jump_url = jump_url + '?' + url_paras.value
 			}
 		}
 		console.log("登录成功，即将跳转url: ", jump_url)
-		
+
 		// 跳转到首页或上一页
 		uni.reLaunch({
 			url: jump_url
 		});
-		
+
 	} catch (e: any) {
 		console.log("e: ", e);
 	}

@@ -6,13 +6,13 @@
 			<view class="pa-10 dflex flex-row align-center justify-space-between" @click="navBk">
 
 				<text class="f-w1" >欢迎来到{{config.mp_name}}！</text>
-				
+
 			</view>
 			<view style="height: 30rpx;"></view> -->
 			<!-- #endif -->
 
 			<!-- <view class="zcolor-black pa-10 bor-r30"> -->
-				
+
 			<view class="dflex flex-row justify-space-between gradient-while-dack mar-t20  bor-r20 align-center "
 				style="position: relative; padding: 45rpx 20rpx 45rpx 20rpx" @click="navTo('/pages/wallet/wallet',true)">
 
@@ -24,7 +24,7 @@
 							class="wh-100 bor-r100">
 						</image>
 					</view>
-					
+
 					<!-- nick & 余额 -->
 					<view class="mar-l15 ">
 						<text class="fs-33  f-w">{{userInfo.nickname || mobile}}</text>
@@ -52,7 +52,7 @@
 					<image :src="config.static+'/fhb.png'" mode="aspectFill" class="bor-r100 wh-40"></image>
 					<text class="fs-28 fcolor-while mar-l10 f-w">立即提现</text>
 				</view> -->
-				
+
 				<!-- 请先登录 -->
 				<!-- <view class="zcolor-black dflex flex-row justify-center align-center"
 					:class="{origin: !go, target: go}"
@@ -61,7 +61,7 @@
 					<image :src="config.static+'/jq.png'" mode="aspectFill" class="bor-r100 wh-40"></image>
 					<text class="fs-28 fcolor-while mar-l10 f-w">登录/注册</text>
 				</view> -->
-				
+
 			</view>
 			<!-- </view> -->
 
@@ -77,7 +77,7 @@
 						class="dflex flex-row justify-space-between align-center">
 
 						<view class="dflex flex-row align-center pa-30-0">
-							
+
 							<view class="dflex align-center justify-center" style="width: 60rpx;">
 								<image :src="item.icon" mode="widthFix" class="wh-40"></image>
 							</view>
@@ -93,21 +93,21 @@
 						</view> -->
 					</button>
 					<!-- #endif -->
-					
+
 					<!-- 意见反馈 -->
 					<!-- #ifdef APP -->
 					<button open-type="feedback" v-if="index==4"
 						class="dflex flex-row justify-space-between align-center">
-					
+
 						<view class="dflex flex-row align-center pa-30-0" >
-							
+
 							<view class="dflex align-center justify-center" style="width: 60rpx;">
 								<image :src="item.icon" mode="widthFix" class="wh-40"></image>
 							</view>
-					
+
 							<text class="fs-30  mar-l10 f-w">{{item.name}}</text>
 						</view>
-					
+
 					</button>
 					<!-- #endif -->
 
@@ -116,7 +116,7 @@
 					<button v-else-if="index==3"
 						@click="appShare()"
 						class="dflex flex-row justify-space-between align-center">
-						
+
 						<view class="dflex flex-row align-center pa-30-0">
 							<view class="dflex align-center justify-center" style="width: 60rpx;">
 								<image :src="item.icon" mode="widthFix" class="wh-40"></image>
@@ -124,7 +124,7 @@
 
 							<text class="fs-30  mar-l10 f-w">{{item.name}}</text>
 						</view>
-						
+
 						<!-- <view class="dflex flex-row align-center">
 							<view class="wh-40 bor-r100 justify-center align-center">
 								<uni-icons type="right" color="#e8e8e8" size="20"></uni-icons>
@@ -161,7 +161,7 @@
 
 
 import { ref, computed } from 'vue'
-	
+
 import {
   onReady,
   onShow,
@@ -217,25 +217,25 @@ const menuList = ref([
 		name: '资金明细',
 		path: '/pages/wallet/money-detail'
 	},
-	
+
 	// {
 	// 	icon: config.static+'/cps/xitonggg.png',
 	// 	name: '系统公告',
 	// 	path: '/pages/my/announcement'
 	// },
-	
+
 	// {
 	// 	icon: config.static+'/cps/kefu.png',
 	// 	name: '联系客服',
 	// 	path: ''
 	// },
-	
+
 	{
 		icon: config.static+'/cps/fxhy.png',
 		name: '分享好友',
 		path: '66'
 	},
-	
+
 	{
 		icon: config.static+'/cps/xitomngg.png',
 		name: '意见反馈',
@@ -356,7 +356,7 @@ const navTo = (url, is_login = false) => {
 
 const appShare = () => {
 	console.log("\n#click app share button.")
-	
+
 	uni.share({
 		provider: 'weixin', // 使用系统分享
 		scene: "WXSceneSession",
@@ -373,7 +373,7 @@ const appShare = () => {
 		  console.log('分享失败：', err);
 		}
 	})
-	
+
 }
 
 const navTo1 = (url) => {
@@ -425,7 +425,7 @@ onShareAppMessage(() => {
 		// 	}
 		// }
 	}
-	
+
 	// 来自页面内的按钮的转发
 	// const options = arguments[0] || {}
 	// if (options.from === 'button') {
@@ -440,7 +440,7 @@ onShareAppMessage(() => {
 
 // 页面内分享
 onShareTimeline(() => {
-	
+
 	return {
 		title: '', // 默认是小程序的名称
 		// path: '/pages/share/share', // 页面路径，默认是当前页面，必须是以'/'开头的完整路径
@@ -466,39 +466,33 @@ onShareTimeline(() => {
 
 onLoad((opts: any) => {
 	console.log("页面参数: ", opts)
-	
+
 	console.log("是否登录：",store_userAuth.userinfo)
-				
+
+
+})
+
+onShow(() => {
 	// 判断是否登入
 	userInfo.value = store_userAuth.userinfo;
 	if (store_userAuth.is_login) {
 		console.log("已登录")
-		
+
 		isLogin.value = true
-		
+
 		mobile.value = store_userAuth.userinfo.mobile ? store_userAuth.userinfo.mobile.substr(0, 3) + '****' + store_userAuth.userinfo.mobile
 			.substr(-4) : ''
-			
+
+		getMoney()
+
 	} else {
 		console.log("未登录")
-		
+
 		mobile.value = '请先登录/注册'
 		isLogin.value = false
 	}
-})
 
-onShow(() => {
-	userInfo.value = store_userAuth.userinfo;
-	
-	if (store_userAuth.is_login) {
-		isLogin.value = true
-		
-		getMoney()
-	}
-	else {
-		// 
-	}
-	
+
 })
 
 </script>
