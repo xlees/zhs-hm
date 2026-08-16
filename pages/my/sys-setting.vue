@@ -17,15 +17,15 @@
 			<view class="pa-35 bor-bom dflex flex-row justify-space-between align-center zcolor-while bor-r30 mar-b30"
 				v-for="(item, index) in setup_list" :key="index" @click="navList(item.path)">
 				
-				<view class="dflex flex-row justify-space-between align-center" v-if="index==3">
+				<view class="dflex flex-row justify-space-between align-center" style="width: 100%;" v-if="index==3">
 					<text class="mar-r30 fs-30 f-w">个性化推荐</text>
 					<switch checked />
 					
 				</view>
 				
-				<view v-else class="dflex flex-row justify-space-between">
+				<view v-else class="dflex flex-row justify-space-between align-center" style="width: 100%;">
 					<text class="fs-30 f-w">{{ item.title }}</text>
-					<view class="">
+					<view class="dflex align-center mar-l30">
 						<uni-icons type="right" color="#e8e8e8" size="20"></uni-icons>
 					</view>
 				</view>

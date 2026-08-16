@@ -4,12 +4,13 @@
 		
 		<view class="" v-else>
 			<view v-if="goodsDec.goodsId">
-				<view class="zcolor-while" style="width: 750rpx;">
+				<view class="zcolor-while goods-gallery">
 					<swiper :indicator-dots="true" :circular="true" class="justify-center align-center"
-						style="height: 650rpx;">
+						style="width: 100%; height: 650rpx;">
 						<swiper-item v-for="(item,index) in goodsDec.goodsCarouselPictures" :key="item"
-							style="height: 750rpx;">
-							<image :src="item" style="width: 750rpx; height: 750rpx;" mode="aspectFill">
+							style="height: 650rpx;">
+							<image :src="item" class="goods-gallery-image"
+								style="display: block; width: 100%; height: 650rpx;" mode="aspectFill">
 							</image>
 						</swiper-item>
 					</swiper>
@@ -79,12 +80,11 @@
 							<topDec name="产品详情" class=""></topDec>
 							<view class="wh-30"></view>
 							
-							<view class="" v-for="item in goodsDec.goodsDetailPictures"
+							<view class="goods-detail-image-wrap" v-for="item in goodsDec.goodsDetailPictures"
 								:key="item">
-								<view>
-									<image :src="item" class="bor-r10 "  mode="aspectFill">
-									</image>
-								</view>
+								<image :src="item" class="bor-r10 goods-detail-image"
+									style="display: block; width: 100%; max-width: 100%; height: auto;" mode="widthFix">
+								</image>
 							</view>
 						</view>
 			
@@ -576,5 +576,38 @@
 </script>
 
 <style lang="scss">
+	.container {
+		box-sizing: border-box;
+		max-width: 100%;
+		overflow-x: hidden;
+	}
+
+	.goods-gallery {
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+		overflow: hidden;
+	}
+
+	.goods-gallery-image {
+		display: block;
+		width: 100%;
+		height: 650rpx;
+		max-width: 100%;
+	}
+
+	.goods-detail-image-wrap {
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		overflow: hidden;
+	}
+
+	.goods-detail-image {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+	}
 
 </style>
