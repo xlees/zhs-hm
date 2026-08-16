@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 顶部选项卡 -->
-		<hTabbar :tabBarArr="moneyTabBars" :tabIndex="tabIndex" @tabtap="tabTap"
+		<hTabbar :tabBarArr="moneyTabBars" :tabIndex="tabIndex" @tab-tap="tabTap"
 			dClass="justify-space-around zcolor-while"  style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999;"></hTabbar>
 		
 		<view class="" style="height: 90rpx;"></view>
@@ -13,9 +13,9 @@
 			<image :src="config.static + '/loading.gif'" mode="widthFix" class="wh-80" style="margin-top: -200rpx;" ></image>
 		</view> -->
 		
-		<list v-if="tableData.length > 0">
+		<view v-if="tableData.length > 0">
 			<!-- 列表 -->
-			<cell v-for="(item, i) in tableData" :key="i" @click="tabDec(item.title)">
+			<view v-for="(item, i) in tableData" :key="i" @click="tabDec(item.title)">
 				<view class=" dflex flex-row align-center zcolor-while justify-space-between pa-40 mar-30 bor-r30  " style="margin-bottom: 0;">
 					<view class="dflex flex-row justify-center">
 						<view class="dflex justify-center align-center">
@@ -37,8 +37,8 @@
 							class="fcolor-red f-w fs-28">{{ parseFloat(item.money).toFixed(2) }}</text>
 					</view>
 				</view>
-			</cell>
-		</list>
+			</view>
+		</view>
 		
 		<noThing v-if="isNothing && tableData.length < 1"></noThing>
 		
