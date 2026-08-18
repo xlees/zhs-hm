@@ -31,12 +31,12 @@
 					</view>
 
 
-					<!-- <view class="dflex flex-row align-center justify-center wh-h130 ">
+					<view class="dflex flex-row align-center justify-center wh-h130 ">
 						<view class="zcolor-black dflex flex-row align-center justify-center  bor-r100"
 							style="height: 100rpx; width: 500rpx;"  @click="loginUniverify">
 							<text class="fs-30 fcolor-while f-w">手机号一键登录/注册</text>
 						</view>
-					</view> -->
+					</view>
 
 					<!-- #endif -->
 
@@ -132,6 +132,7 @@ import Common from '@/common/common'
 import Api from "@/common/api.ts"
 import { useUserAuthStore } from "@/store/user-auth"
 import config from '@/config.js'
+import dayjs from 'dayjs'
 
 let weixinAuthService: any = null
 
@@ -846,7 +847,9 @@ const loginUniverify = () => {
 		},
 		fail: (res: any) => { // 登录失败
 			uni.hideLoading();
-			console.log(res)
+
+			console.log("\n登录失败：\n", res)
+
 			if (res.errCode === 30005) {
 				Common.showToast("请先打开流量数据")
 				uni.closeAuthView()
@@ -912,7 +915,15 @@ const login_sms = async (data: any) => {
 		store_userAuth.token = res.result.token
 		store_userAuth.token_expired = res.result.tokenExpired
 		store_userAuth.uid = res.result.uid
-		store_userAuth.userinfo = res.result.userInfo
+		store_userAuth.userinfo = {
+			uid: res.result.uid,
+			mobile: res.result.userInfo.mobile,
+			nickname: res.result.userInfo.nickname,
+			avatar: res.result.userInfo.avatar,
+			deviceid: res.result.userInfo.deviceid,
+			client_ip: res.result.userInfo.register_env.client_ip,
+			register_date: dayjs(res.result.userInfo.register_date).format('YYYY-MM-DD HH:mm:ss')
+		}
 		store_userAuth.avatar = res.result.userInfo.avatar
 		store_userAuth.nickname = res.result.userInfo.nickname
 
@@ -929,22 +940,36 @@ const login_sms = async (data: any) => {
 			icon: 'success'
 		});
 
-		let jump_url = '/pages/home/index'
 		if (back_url.value) {
-			jump_url = decodeURIComponent(back_url.value)
+			console.log("回调地址：\n", back_url.value)
 
-			if (url_paras.value) {
-				jump_url = jump_url + '?' + url_paras.value
-			}
+			uni.redirectTo({
+				url: decodeURIComponent(back_url.value)
+			})
+
+		} else {
+			uni.reLaunch({
+				url: '/pages/home/index'
+			})
 		}
-		console.log("登录成功，即将跳转url: ", jump_url)
 
-		// 跳转到首页或上一页
-		uni.reLaunch({
-			url: jump_url
-		});
+		// let jump_url = '/pages/home/index'
+		// if (back_url.value) {
+		// 	jump_url = decodeURIComponent(back_url.value)
+
+		// 	if (url_paras.value) {
+		// 		jump_url = jump_url + '?' + url_paras.value
+		// 	}
+		// }
+		// console.log("登录成功，即将跳转url: ", jump_url)
+
+		// uni.navigateTo({
+		// 	url: jump_url
+		// })
+
 
 	} catch (e: any) {
+
 		console.log("e: ", e);
 	}
 }
