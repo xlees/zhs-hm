@@ -2,8 +2,8 @@
     "name" : "甄慧省",
     "appid" : "__UNI__5E17AC8",
     "description" : "一款基于deepseek、可以帮你省钱&赚钱的智能购物领券助手",
-    "versionName" : "1.0.3",
-    "versionCode" : 103,
+    "versionName" : "1.0.4",
+    "versionCode" : 104,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
