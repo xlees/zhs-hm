@@ -544,7 +544,20 @@ const goodsDesc = (item: any) => {
 			const click_url = goodsRs.result.data.click_url
 			const dplink = `tbopen://m.taobao.com/tbopen/index.html?action=ali.open.nav&module=h5&bc_fl_src=tunion_mm_mm&h5Url=${encodeURIComponent(click_url)}`
 
-			openSchema(dplink)
+			const url = dplink;
+			if (canOpenURL(url)) {
+
+			    openSchema(dplink);
+
+			} else {
+			    // 目标应用未安装或无法处理该 scheme
+			    uni.showToast({
+			        title: '未安装淘宝app，请去手机应用市场下载哦！',
+			        icon: 'none',
+					duration: 3000
+			    });
+			}
+
 		})
 
 	}

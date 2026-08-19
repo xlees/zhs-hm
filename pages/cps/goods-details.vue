@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<loadingIcon v-if="loading" lClass="mar--t200"></loadingIcon>
-		
+
 		<view class="" v-else>
 			<view v-if="goodsDec.goodsId">
 				<view class="zcolor-while goods-gallery">
@@ -14,16 +14,16 @@
 							</image>
 						</swiper-item>
 					</swiper>
-					
+
 					<view class="zcolor-while" style="height: 10rpx;"></view>
 				</view>
-				
+
 				<view class="zcolor-while ">
-			
+
 					<view class="zcolor-while1 pa-30"
 						style="border-top-right-radius: 50rpx; border-top-left-radius: 50rpx;">
 						<view class="pa-30 zcolor-while bor-r30">
-			
+
 							<view class="dflex flex-row justify-space-between align-center">
 								<view class="dflex flex-row align-center">
 									<view class="dflex flex-row align-center">
@@ -36,7 +36,7 @@
 											style="text-decoration: line-through;">{{ goodsDec.marketPrice }}</text>
 									</view>
 								</view>
-			
+
 							</view>
 							<text class="fs-31 f-w1 mar-t30  text-overflow">{{goodsDec.goodsName}}</text>
 							<view class="dflex flex-row justify-space-between align-center mar-t30">
@@ -44,9 +44,9 @@
 									<view class="zcolor-while bor-r100">
 										<image :src="tab_img" mode="aspectFill" class="bor-r100 wh-40" />
 									</view>
-									
+
 									<text class="fs-26  mar-l10">{{goodsDec.shopName.substr(0,16) + '...'}}</text>
-									
+
 									<!-- <text class="fs-26  mar-l10"
 										v-if="goodsDec.shopName.length>=10">{{goodsDec.shopName.substr(0,10) + '...'}}</text>
 									<text class="fs-26  mar-l10" v-else>{{shopName}}</text> -->
@@ -58,7 +58,7 @@
 											<text
 												class="fs-26  fcolor-red f-w">{{(goodsDec.discount*10).toFixed(0)}}折</text>
 										</view> -->
-										
+
 									<view class="dflex flex-row align-center" v-if="goodsDec.discount!==null">
 										<text class="fs-26  fcolor-dark1">省：</text>
 										<text class="fs-26  fcolor-red f-w">{{parseFloat(goodsDec.discount).toFixed(1)}}元</text>
@@ -73,13 +73,13 @@
 									</view> -->
 								</view>
 							</view>
-			
+
 						</view>
-						
+
 						<view class="flex flex-column zcolor-while bor-r30 mar-t30  pa-30">
 							<topDec name="产品详情" class=""></topDec>
 							<view class="wh-30"></view>
-							
+
 							<view class="goods-detail-image-wrap" v-for="item in goodsDec.goodsDetailPictures"
 								:key="item">
 								<image :src="item" class="bor-r10 goods-detail-image"
@@ -87,13 +87,13 @@
 								</image>
 							</view>
 						</view>
-			
+
 						<view class="wh-h130 zcolor-while1"></view>
-						
-						
-						
+
+
+
 						<view class="position-r-b-l dflex flex-row justify-space-between align-center pa-0 zcolor-while mar-30 bor-r100">
-							
+
 							<!-- #ifdef MP-WEIXIN -->
 							<!-- <button  open-type="share"  style="border-radius: 50rpx;">
 								<view   class="gradient-red-purple wh-85-200 bor-r50  dflex flex-row align-center justify-center" >
@@ -102,19 +102,19 @@
 								</view>
 							</button> -->
 							<!-- #endif -->
-							
+
 							<view class="gradient-red-purple bor-r50 dflex align-center justify-center " style="width: 100vh; height: 85rpx;"
 								  @click="navTb(2)">
 								<text class=" fs-30 fcolor-while f-w">直达购买链接</text>
 							</view>
-							
+
 						</view>
-					
+
 					</view>
 				</view>
-			
+
 			</view>
-			
+
 			<!-- 商品不存在 -->
 			<view class="dflex justify-center align-center flex-column" style="height: 100vh;" v-else>
 				<view class="">
@@ -128,13 +128,13 @@
 				</view>
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
 <script setup lang="ts">
 	import { ref, computed } from 'vue'
-	
+
 	import {
 	  onReady,
 	  onShow,
@@ -142,17 +142,22 @@
 	  onShareAppMessage,
 	  onShareTimeline
 	} from '@dcloudio/uni-app'
-	
+
 	import utils from "@/common/utils.js"
 	import { useUserAuthStore } from "@/store/user-auth"
 	import Common from '@/common/common'
 	import { openSchema, canOpenURL } from '@/uni_modules/uts-openSchema'
-	
+
+	import {
+		isAppInstalled,
+		getInstalledApps
+	} from '@/common/pkg'
+
 	import config from '@/config.js'
-	
+
 	const store_userAuth = useUserAuthStore()
-	
-	
+
+
 	// 页面数据
 	interface GoodsDetail {
 		goodsId: string
@@ -179,36 +184,40 @@
 		toast_msg: string
 		censor: boolean
 	}
-	
+
+	// const hasTaobao = isAppInstalled('taobao')
+	const result = getInstalledApps(['taobao', 'jd', 'pdd'])
+	console.log("购物app检测结果: \n", result)
+
 	const censor = ref(false)
-	
+
 	// 领券文本，根据是否登录来显示
 	const gotoText = ref('领取优惠')
 	const goodsId = ref('')
 	// const goodsDec = ref<GoodsDetail>({})
 	const goodsDec = ref<GoodsDetail | null>(null)
-	
+
 	const loading = ref(true)
 	const tab_img = ref('')
 	const isTj = ref(false)
 	const toast_msg = ref('口令码已复制！')
-	
+
 	const source = ref('pdd')
 	const shopName = ref('')
 	const finalPrice = ref('')
 	const marketPrice = ref('')
 	const discount = ref('')
-	
+
 	// const config = ref(uni.getStorageSync('config') || {})
-	
+
 	// 获取商品详情
 	const fetchGoods = () => {
-		
-		let sourceVal = source.value 
+
+		let sourceVal = source.value
 		if (sourceVal == 'tb') {
 			sourceVal = 'taobao'
 		}
-		
+
 		uniCloud.callFunction({
 			name: 'cps',
 			data: {
@@ -221,28 +230,28 @@
 		})
 		.then((goodsRs) => {
 			console.log("\ngoods detail query result: \n", goodsRs.result)
-			
+
 			const data = goodsRs.result.data || {}
 			goodsDec.value = data
 			toast_msg.value = data.toast_msg
 			censor.value = data.censor
-			
+
 			loading.value = false
 		})
-		
+
 		if(!store_userAuth.is_login) {
 			gotoText.value = '登录领取优惠'
 		}
 	}
-	
+
 	// 用户打开商详页时上报行为
 	// const trackPvEvent = async () => {
 	// 	goodsDec.value.finalPrice = goodsDec.value.price
 	// 	goodsDec.value.marketPrice = String(goodsDec.value.marketPriceNum)
 	// 	goodsDec.value.discount = String(goodsDec.value.discountNum)
-		
+
 	// 	const pages = getCurrentPages()
-		
+
 	// 	const reportRs = await uniCloud.callFunction({
 	// 		name: 'tracking',
 	// 		data: {
@@ -257,20 +266,20 @@
 	// 	})
 	// 	console.log("pv 上报结果：\n",reportRs.result)
 	// }
-	
+
 	// 返回上个页面
 	const navB = () => {
 		uni.navigateBack()
 	}
-	
+
 	// 跳转淘宝/京东/拼多多/唯品会
 	const navTb = (i: number) => {
 		// const store_userAuth = storeUserAuth()
-		
+
 		console.log('i: ',i);
-		
+
 		if (i == 1) {
-			
+
 			// #ifdef APP-PLUS
 			plus.share.sendWithSystem(
 				{
@@ -285,7 +294,7 @@
 					console.log('分享失败', err)
 				}
 			)
-			
+
 			// uni.share({
 			// 	provider: 'weixin',
 			// 	scene: 'WXSceneSession',
@@ -298,28 +307,28 @@
 			// 	}
 			// })
 			// #endif
-			
+
 		} else {
-			
+
 			// 没有登录，先去登录
 			// if (!store_userAuth.is_login) {
 			// 	const curr_url = getCurrentPageAndParas();
 			// 	console.log("当前页面及参数为：\n",curr_url)
-				
+
 			// 	uni.navigateTo({
 			// 		url: '/pages/login/login?back_url=/'+encodeURIComponent(curr_url)
 			// 	})
-				
+
 			// 	return
 			// }
 			console.log('goodsDec: ', goodsDec.value);
-			
+
 			if (source.value == "taobao" || source.value=='tb') {
-				
-				
+
+
 				// #ifdef MP-WEIXIN
 				// if (!censor.value) {
-					
+
 				// 	Common.fz(
 				// 		goodsDec.value.tpwd,
 				// 		toast_msg.value,
@@ -331,15 +340,30 @@
 				// #ifdef APP
 				// utils.openLink('taobao://' + goodsDec.value.click_url.split('://')[1], (res) => {
 				// 	utils.openLink(goodsDec.value.click_url)
-					
+
 				// }, 'com.taobao.taobao')
-				
+
 				const dplink = `tbopen://m.taobao.com/tbopen/index.html?action=ali.open.nav&module=h5&bc_fl_src=tunion_mm_mm&h5Url=${encodeURIComponent(goodsDec.value.click_url)}`
+
+				const url = dplink;
+				if (canOpenURL(url)) {
+
+				    openSchema(dplink);
+
+				} else {
+				    // 目标应用未安装或无法处理该 scheme
+				    uni.showToast({
+				        title: '未安装淘宝app，请去手机应用市场下载哦！',
+				        icon: 'none',
+						duration: 3000
+				    });
+				}
+
 				openSchema(dplink)
 				// #endif
 
 			} else if (source.value == "jd") {
-				
+
 				// #ifdef MP-WEIXIN
 				uni.navigateToMiniProgram({
 					appId: goodsDec.value.we_app_info.app_id, // 此为 开源字节 appid
@@ -357,21 +381,35 @@
 
 				// #ifdef APP-PLUS
 				const paras = {
-					'category': 'jump', 
+					'category': 'jump',
 					'des': 'm',
 					'url': goodsDec.value.url
 				}
 				const dplink = `openapp.jdmobile://virtual?params=${encodeURIComponent(JSON.stringify(paras))}`
-				
-				openSchema(dplink)
+
+				const url = dplink;
+				if (canOpenURL(url)) {
+
+				    openSchema(dplink);
+
+				} else {
+				    // 目标应用未安装或无法处理该 scheme
+				    uni.showToast({
+				        title: '未安装京东app，请去手机应用市场下载哦！',
+				        icon: 'none',
+						duration: 3000
+				    });
+				}
+
+				// openSchema(dplink)
 				// #endif
-				
+
 			} else if (source.value == "pdd") {
-				
+
 				// #ifdef MP-WEIXIN
 				uni.navigateToMiniProgram({
 					appId: goodsDec.value.we_app_info.app_id, // 此为 开源字节 appid
-					
+
 					path: goodsDec.value.we_app_info.page_path, // 此为开源字节首页路径
 					envVersion: "release",
 					success: (res: any) => {
@@ -383,10 +421,24 @@
 					}
 				})
 				// #endif
-				
+
 				// #ifdef APP-PLUS
 				const dplink = `pinduoduo://com.xunmeng.pinduoduo/app.html?url=${encodeURIComponent(goodsDec.value.url)}`
-				openSchema(dplink)
+
+				const url = dplink;
+				if (canOpenURL(url)) {
+
+				    openSchema(dplink);
+
+				} else {
+				    // 目标应用未安装或无法处理该 scheme
+				    uni.showToast({
+				        title: '未安装拼多多app\n请去手机应用市场下载哦！',
+				        icon: 'none',
+						duration: 3000
+				    });
+				}
+
 				// #endif
 
 			} else if (source.value == "vip") {
@@ -404,7 +456,7 @@
 					}
 				})
 				// #endif
-				
+
 				// #ifdef APP-PLUS
 				openSchema(goodsDec.value.url)
 				// #endif
@@ -414,16 +466,16 @@
 					`${goodsDec.value.url}\n商品标题：${goodsDec.value.goodsName}\n原价：${goodsDec.value.price}元\n优惠券：${goodsDec.value.discount}元\n返利：${goodsDec.value.commission}元\n复制该文字到抖音 APP 打开即可获得优惠及返利！`,
 					'复制口令成功，请打开抖音 APP'
 				)
-				
+
 			}
 		}
 	}
-	
+
 	// 获取当前页面及参数
 	const getCurrentPageAndParas = () => {
 		const pages = getCurrentPages()
 		console.log("当前页面为：", pages)
-		
+
 		// const currentPage = pages[pages.length - 1]
 		const currentPage = pages[pages.length - 1] as {
 			route: string
@@ -431,20 +483,20 @@
 		}
 		const url = currentPage.route
 		const options = currentPage.options
-		
+
 		const params = Object.keys(options)
 			.map(key => `${key}=${options[key]}`)
 			.join('&')
-		
+
 		return url + (params ? '?' + params : '')
 	}
-	
+
 	// 设置分享
 	onShareTimeline(() => {
 		let shareTitle = ''
 		shareTitle += '到手' + goodsDec.value.price.toFixed(1) + '元，立省' + (goodsDec.value.marketPriceNum - goodsDec.value.price).toFixed(1) + '元'
 		shareTitle += '\n' + goodsDec.value.goodsName.substr(0, 10) + "..."
-		
+
 		const data = {
 			title: shareTitle, // 默认是小程序的名称
 			path: `/pages/cps/goods-details?goodsId=${goodsId.value}&source=${source.value}`, // 默认是当前页面，必须是以 '/' 开头的完整路径
@@ -464,27 +516,27 @@
 		}
 		return data
 	})
-	
+
 	// 分享给好友
 	onShareAppMessage(() => {
-		
+
 		let shareTitle = ''
 		shareTitle += '到手' + goodsDec.value.price.toFixed(1) + '元，立省' + (goodsDec.value.marketPriceNum - goodsDec.value.price).toFixed(1) + '元'
 		shareTitle += '\n' + goodsDec.value.goodsName.substr(0, 10) + "..."
-		
+
 		// 设置菜单中的转发按钮触发转发事件时的转发内容
 		return {
-			title: shareTitle, 
+			title: shareTitle,
 			// desc: "商品标题" + goodsDec.value.goodsName, // 小程序的描述
 			path: `/pages/cps/goods-details?goodsId=${goodsId.value}&source=${source.value}`, // 默认是当前页面，必须是以 '/' 开头的完整路径
 			imageUrl: goodsDec.value.goodsCarouselPictures[0], // 图片封面，本地文件路径、网络图片路，支持 PNG 及 JPG，默认当前页面截图，显示图片长宽比是 5:4。
 			// success: (res: any) => {
 			// 	// 转发成功之后的回调
 			// 	console.log('shareapp succ')
-				
+
 			// 	if (res.errMsg === 'shareAppMessage:ok') {
 			// 		console.log(res)
-				
+
 			// 	}
 			// },
 			// fail: (res: any) => {
@@ -498,7 +550,7 @@
 			// 	}
 			// }
 		}
-		
+
 		// 来自页面内的按钮的转发
 		// if (arguments[0].from === 'button') {
 		// 	const eData = arguments[0].target.dataset
@@ -506,21 +558,21 @@
 		// 	// 此处可以修改 shareObj 中的内容
 		// 	shareObj.path = `/pages/cps/goods-details?goodsId=${goodsId.value}&source=${source.value}`
 		// }
-		
+
 	})
-	
+
 	// onLoad 生命周期
 	onLoad((data: any) => {
 		console.log('onload options of goods-detail: ',data)
-		
+
 		goodsId.value = data.goodsId
 		source.value = data.source || 'pdd'
 		shopName.value = data.shopName
-		
+
 		finalPrice.value = data.finalPrice || ''
 		marketPrice.value = data.marketPrice || ''
 		discount.value = data.discount || ''
-		
+
 		if (source.value == 'taobao' || source.value=='tb') {
 			tab_img.value = config.static +  '/tb.png'
 		} else if (source.value == 'jd') {
@@ -532,13 +584,13 @@
 		} else {
 			tab_img.value = config.static +  '/dy.png'
 		}
-		
+
 		fetchGoods()
-		
+
 		if(!store_userAuth.is_login) {
 			gotoText.value = '登录领取优惠'
 		}
-		
+
 		// 仅 app 平台支持
 		// plus.device.getOAID({
 		// 	success:function(e){
@@ -548,7 +600,7 @@
 		// 		console.log('getOAID failed: '+JSON.stringify(e));
 		// 	}
 		// });
-		
+
 		// 获取位置参数
 		// uni.getLocation({
 		// 	type: 'wgs84',
@@ -556,13 +608,13 @@
 		// 		console.log('当前位置：', res)
 		// 	}
 		// });
-		
+
 		// trackPvEvent()
 	})
-	
+
 	// onShow 生命周期
 	onShow(() => {
-		
+
 		// #ifdef MP-WEIXIN
 		// uni.showShareMenu({
 		// 	withShareTicket: true,
@@ -570,9 +622,9 @@
 		// 	menus: ["shareAppMessage", "shareTimeline"]
 		// })
 		// #endif
-		
+
 	})
-	
+
 </script>
 
 <style lang="scss">
