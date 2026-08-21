@@ -632,7 +632,16 @@ const navToApp = (app: any) => {
 			// 	}
 			// );
 
-			openSchema(app.android_dplink)
+			if (canOpenURL(app.android_dplink)) {
+				openSchema(app.android_dplink)
+			}
+			else {
+				uni.showToast({
+					title: `亲手机未安装${app.name}，请去应用市场下载哦！`,
+					icon: 'none',
+					duration: 3000
+				});
+			}
 
 		}
 		else {
