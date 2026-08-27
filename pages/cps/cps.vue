@@ -501,7 +501,7 @@ onShow(() => {
 .bor-bottom button {
 	margin-left: 0rpx;
 	padding-left: 0rpx;
-	background-color: white;
+	background-color: transparent;
 	line-height: normal;
 }
 
