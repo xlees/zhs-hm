@@ -1,38 +1,25 @@
 <template>
 	<view class="container" >
-		<!-- #ifdef H5 -->
-		<view v-if="isWidescreen" class="header">uni-ai-chat</view>
-		<!-- #endif -->
-		
-		<!-- #ifdef MP-WEIXIN -->
-		<!-- <view class="" style="position: fixed; top: 7rpx; right: 80rpx; background-color: red;" v-if="addTs">
-			<view class=" pa-15-20 bor-r50 " style="background-color: red;">
-				<view class="dflex align-center" style="background-color: red;">
-					<text class="fs-28">添加到我的小程序，买便宜好用的东西，就问Ai购物小助手！</text>
-				</view>
-			</view>
-		</view> -->
-		<!-- #endif -->
 		
 		<scroll-view class="chat-scroll" style="" :scroll-into-view="scrollIntoView" scroll-x="false" scroll-y="true">
-			<view style="padding:10rpx; " >
+			<view class="welcome-text welcome-title">
 				我是你专属的智能购物小助手,</view>
-			<view style="padding:10rpx; " >
+			<view class="welcome-text">
 				如果你有任何关于购物省钱方面的问题，都可以问我哦！</view>
-			<view style="padding:10rpx; margin-bottom: 30rpx;"  >
+			<view class="welcome-text welcome-subtitle">
 				试试下面的问题吧！
 			</view>
 			
 			<!-- 默认定义的prompts -->
-			<view class="u-flex u-flex-column u-flex-items-baseline ">
-				<view class="init-prompts " v-for="(prompt,index) in prompts" :key="index"  @click="handleClick(prompt)">
+			<view class="prompts-grid">
+				<view class="init-prompts" v-for="(prompt,index) in prompts.slice(0, 4)" :key="index" @click="handleClick(prompt)">
 					<text>{{ prompt }}</text>
 				</view>
 			</view>
 			
 			<!-- 小助手回复&用户发送的消息 -->
 			<uni-ai-msg v-for="(msg,index) in msgList" :key="index" :msg="msg" @changeAnswer="changeAnswer"
-				:show-cursor="index == msgList.length - 1 && msgList.length%2 === 0 && sseIndex"
+				:show-cursor="index == msgList.length - 1 && msgList.length%2 === 0 && !isMsgFinished"
 				:isAd=isChatAd
 				:isAiFinish="sseIndex === 0"
 				:isLastMsg="index == msgList.length - 1" @removeMsg="removeMsg(index)">
@@ -68,7 +55,7 @@
 			<!-- 底部锚点元素 -->
 			<view id="last-msg-item" ></view>
 		</scroll-view>
-
+		
 		<!-- 用户输入框 -->
 		<view 
 			class="user-msg-input"
@@ -114,19 +101,6 @@
 			</view>
 		</view>
 		
-		<!-- <view class="foot-box" :style="{'padding-bottom':footBoxPaddingBottom}"> -->
-			<!-- #ifdef H5 -->
-			<!-- <view class="pc-menu" v-if="isWidescreen">
-				<view class="pc-trash pc-menu-item" @click="clearAllMsg" title="删除">
-					<image src="@/static/remove.png" mode="heightFix"></image>
-				</view>
-				<view class="settings pc-menu-item" @click="setLLMmodel" title="设置">
-					<uni-icons color="#555" size="20px" type="settings"></uni-icons>
-				</view>
-			</view> -->
-			<!-- #endif -->
-		<!-- </view> -->
-		
 	</view>
 </template>
 
@@ -142,8 +116,6 @@
 	
 	// 导入uniCloud云对象task模块
 	import uniCoTask from '@/common/unicloud-co-task.js';
-	// 导入 将多个字消息文本，分割成单个字 分批插入到最末尾的消息中 的类
-	import SliceMsgToLastMsg from './SliceMsgToLastMsg.js';
 
 	// Vue 3 composition API
 	import { ref, computed, watch, nextTick, onMounted } from 'vue'
@@ -161,7 +133,7 @@
 		uniCoTaskList.splice(0, uniCoTaskList.length)
 	}
 
-	// 消息类型定义
+	// 消息类型定义: 用户或ai生成
 	interface ChatMessage {
 		isAi?: boolean
 		content: string
@@ -209,6 +181,8 @@
 	const msgCreateTime = ref(0)
 	const comparisonResult: any = ref(null)
 	const loadingText = ref('')
+	
+	const replyMessage = ref<string[]>([])
 
 	// Stores
 	const store_memo = useMemoStore()
@@ -265,7 +239,7 @@
 
 	// 生命周期
 	onLoad((e: any) => {
-		console.log("聊天页onLoad: ", e, getApp().globalData)
+		console.log("\n聊天页onLoad: ", e, getApp().globalData)
 
 		pageQuery.value = uni.createSelectorQuery()
 
@@ -309,7 +283,20 @@
 		if (Object.prototype.hasOwnProperty.call(e, 'content') && e.content && e.content.length > 1) {
 			content.value = e.content || ''
 
-			if (e.auto === '1') {
+			if ('auto' in e && e.auto === '1') {
+				
+				msgList.value.push({
+					isAi: false,
+					content: content.value,
+					create_time: Date.now()
+				})
+				console.log("\n当前消息列表内容:\n", msgList.value)
+				
+				showLastMsg()
+				nextTick(() => {
+					content.value = ''
+				})
+				
 				send()
 			}
 		}
@@ -318,65 +305,6 @@
 		setTimeout(() => {
 			addTs.value = false
 		}, 5000)
-
-		// #ifdef MP-WEIXIN
-		if ((wx as any).createRewardedVideoAd) {
-			console.log('创建激励视频实例')
-
-			videoAd.value = (wx as any).createRewardedVideoAd({
-				adUnitId: 'adunit-cc6ca091462bc952'
-			})
-
-			videoAd.value.onLoad(() => {
-				console.log('wx激励视频广告预加载成功')
-			})
-
-			videoAd.value.onError((err: any) => {
-				console.error('wx激励视频光告加载失败', err)
-			})
-
-			videoAd.value.onClose((res: any) => {
-				console.log("rewarded video res:", res)
-
-				if (res && res.isEnded) {
-					console.log("用户看完了广告，下发奖励")
-
-					isAdFinish.value = true
-
-					let uId = uniCloud.getCurrentUserInfo().uid
-					if (!uId) {
-						uni.showToast({
-							title: "登录" + config.mp_name + "，领取奖励！",
-							icon: 'none',
-							position: 'bottom',
-							duration: 2000
-						})
-
-						uni.navigateTo({
-							url: '/sub_pkgs/common/login/login?scene=reward_no_login',
-							fail: (err: any) => {
-								console.error('聊天页面跳转失败', err)
-							}
-						})
-
-						return
-					}
-				} else {
-					console.log("用户中途退出，不下发奖励")
-
-					uniCloud.callFunction({
-						name: 'ad-track',
-						data: {
-							user_id: uid.value,
-							adtype: 'cancel'
-						}
-					}).then((res: any) => {
-						console.log("cancel log: ", res)
-					})
-				}
-			})
-		}
-		// #endif
 		
 		console.log("\n#msgList: \n", msgList.value)
 	})
@@ -416,53 +344,6 @@
 		}
 		
 
-		// #ifdef H5
-		let adjunctKeydown = false
-		const textareaDom = document.querySelector('.textarea-box textarea') as HTMLTextAreaElement | null
-		if (textareaDom) {
-			textareaDom.onkeydown = (e: KeyboardEvent) => {
-				if ([16, 17, 18, 93].includes(e.key as any)) {
-					adjunctKeydown = true;
-				}
-				if (e.key === '13' && !adjunctKeydown) {
-					e.preventDefault()
-					setTimeout(() => {
-						beforeSend()
-					}, 300)
-				}
-			}
-			textareaDom.onkeyup = (e: KeyboardEvent) => {
-				if ([16, 17, 18, 93].includes(e.key as any)) {
-					adjunctKeydown = false;
-				}
-			}
-
-			let initialInnerHeight = window.innerHeight;
-			const domContainer = document.querySelector('.container') as HTMLTextAreaElement | null
-			if (uni.getSystemInfoSync().platform === "ios") {
-				textareaDom.addEventListener('focus', () => {
-					let interval = setInterval(function() {
-						if (window.innerHeight !== initialInnerHeight) {
-							clearInterval(interval)
-							
-							domContainer.style.height = window.innerHeight + 'px'
-							window.scrollTo(0, 0);
-							showLastMsg()
-						}
-					}, 1);
-				})
-				textareaDom.addEventListener('blur', () => {
-					
-					domContainer.style.height = initialInnerHeight + 'px'
-				})
-			} else {
-				window.addEventListener('resize', () => {
-					showLastMsg()
-				})
-			}
-		}
-		// #endif
-
 		// #ifndef H5
 		uni.onKeyboardHeightChange((e: any) => {
 			console.log("\n#输入法小键盘高度变化:\n", e)
@@ -484,6 +365,7 @@
 	const updateLastMsg = (param: any) => {
 		if (msgList.value.length === 0) return
 
+		// ChatMessage 格式
 		const lastMsg = msgList.value[msgList.value.length - 1]
 
 		if (typeof param === 'function') {
@@ -557,6 +439,25 @@
 		}
 		msgList.value.splice(index, 2)
 	}
+	
+	// const getCurrentPageAndParas = () => {
+	// 	const pages = getCurrentPages()
+	// 	console.log("当前页面为：", pages)
+		
+	// 	// const currentPage = pages[pages.length - 1]
+	// 	const currentPage = pages[pages.length - 1] as {
+	// 		route: string
+	// 		options: Record<string, any>
+	// 	}
+	// 	const url = currentPage.route
+	// 	const options = currentPage.options
+		
+	// 	const params = Object.keys(options)
+	// 		.map(key => `${key}=${options[key]}`)
+	// 		.join('&')
+		
+	// 	return url + (params ? '?' + params : '')
+	// }
 
 	// 点击"发送"消息按钮
 	const beforeSend = () => {
@@ -585,6 +486,7 @@
 				icon: 'none'
 			});
 		}
+		
 		if (adpid) {
 			let token = uni.getStorageSync('uni_id_token')
 			if (!token) {
@@ -690,14 +592,8 @@
 
 			sseChannel.value = new uniCloud.SSEChannel()
 			console.log('sseChannel', sseChannel);
-
-			sliceMsgToLastMsg.value = new SliceMsgToLastMsg({
-				updateLastMsg,
-				showLastMsg,
-				get msgCreateTime() { return msgCreateTime.value },
-				set msgCreateTime(val: number) { msgCreateTime.value = val }
-			})
-			let toolResultStr = ''
+			
+			// let toolResultStr = ''
 			let toolFlag = false
 
 			console.log("\n#ssechannel event...\n")
@@ -708,10 +604,12 @@
 
 				if (toolFlag) {
 					console.log("\n当前商品:\n", message)
+					
 					let tcall_result = JSON.parse(message)
 					if (!('aiToolResult' in msgList.value[msgList.value.length - 1])) {
 						msgList.value[msgList.value.length - 1].aiToolResult = []
 					}
+					
 					msgList.value[msgList.value.length - 1].aiToolResult.push(tcall_result)
 				}
 
@@ -721,21 +619,30 @@
 
 				if (!toolFlag && sseIndex.value === 0) {
 					const ct = Date.now()
+					
 					msgList.value.push({
 						isAi: true,
 						content: message,
 						create_time: ct
 					})
 					msgCreateTime.value = ct
+					
 				} else {
+					
 					if (toolFlag) return
-					sliceMsgToLastMsg.value.addMsg(message)
+					
+					// sliceMsgToLastMsg.value.addMsg(message)
+					
 					updateLastMsg((lastMsg: any) => {
+						// 消息列表中的最后一条消息传进来
 						lastMsg.content += message
+						
+						replyMessage.value.push(message)
 					})
 				}
 
 				showLastMsg()
+				
 				sseIndex.value++
 			})
 
@@ -743,7 +650,7 @@
 				console.log('sse 结束', e)
 
 				isMsgFinished.value = true
-				console.log('end tool flag:\n', (e as any)?.toolFlag)
+				sseIndex.value = 0
 
 				sliceMsgToLastMsg.value.t = 0
 				if (e && typeof e === 'object' && e.errCode) {
@@ -785,7 +692,8 @@
 						setLastAiMsgContent(e.errMsg)
 					}
 				}
-				sseIndex.value = 0
+				
+				
 			})
 
 			await sseChannel.value.open();
@@ -1082,11 +990,12 @@
 		border-radius: 20rpx;
 		
 		// justify-content: space-around;
+		align-items: center;
 		align-content: center;
-		gap: 10rpx;
+		gap: 6rpx;
 		
-		padding: 15rpx 0rpx;
-		margin: 10rpx 0;
+		padding: 5px 6rpx;
+		margin: 10rpx 0 3px;
 	}
 
 	.foot-box-content {
@@ -1099,9 +1008,12 @@
 
 	.textarea-box {
 		flex: 1;
-		padding: 8px 8px;
+		min-width: 0;
+		min-height: 38px;
+		padding: 5px 8px;
 		background-color: #f9f9f9;
 		border-radius: 20px;
+		align-items: center;
 	}
 
 	.textarea-box .textarea {
@@ -1129,11 +1041,16 @@
 
 	.trash,
 	.send {
-		width: 50px;
-		height: 30px;
+		width: 56px;
+		height: 34px;
 		justify-content: center;
 		align-items: center;
 		flex-shrink: 0;
+	}
+
+	.send-btn-box {
+		flex-shrink: 0;
+		align-items: center;
 	}
 
 	.trash {
@@ -1142,15 +1059,17 @@
 	}
 
 	.menu {
+		width: 30px;
+		height: 38px;
 		justify-content: center;
 		align-items: center;
 		flex-shrink: 0;
 	}
 
 	.menu-item {
-		flex: 1;
-		width: 30rpx;
-		margin: 0 10rpx;
+		width: 24px;
+		height: 24px;
+		margin: 0;
 	}
 
 	.send {
@@ -1160,7 +1079,7 @@
 		margin: 0;
 		padding: 0;
 		font-size: 14px;
-		margin-right: 20rpx;
+		margin-right: 4rpx;
 	}
 
 	/* #ifndef APP-NVUE */
@@ -1178,16 +1097,55 @@
 		// border: 1px solid red;
 	}
 	
+	.prompts-grid {
+		width: 100%;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		gap: 24rpx;
+		padding: 0 50rpx 20rpx;
+	}
+
 	.init-prompts {
-		// display: inline-flex;
-		// width: auto;
-		margin-bottom: 25rpx;
-		margin-left: 50rpx;
-		padding: 18rpx;
-		border-radius: 20rpx;
-		border-color: lightgray;
-		border-style: solid;
-		border-width: 2rpx;
+		flex: 0 0 auto;
+		align-self: flex-start;
+		min-height: 88rpx;
+		max-width: 92%;
+		box-sizing: border-box;
+		padding: 18rpx 34rpx;
+		border: none;
+		border-radius: 999rpx;
+		background-color: #fff;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.init-prompts text {
+		width: auto;
+		color: #202124;
+		font-size: 36rpx;
+		line-height: 52rpx;
+		max-height: 112rpx;
+		text-align: center;
+		word-break: break-all;
+		overflow: hidden;
+	}
+
+	.welcome-text {
+		padding: 10rpx 50rpx;
+		color: #62666b;
+		font-size: 36rpx;
+		line-height: 54rpx;
+	}
+
+	.welcome-title {
+		padding-top: 28rpx;
+	}
+
+	.welcome-subtitle {
+		margin-top: 26rpx;
+		margin-bottom: 28rpx;
 	}
 
 	.noData {

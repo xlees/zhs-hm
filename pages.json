@@ -1,5 +1,5 @@
 {
-	
+
 	"easycom": {
 		"autoscan": true,
 		// 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
@@ -7,7 +7,7 @@
 			"^u--(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
 			"^up-(.*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
 			"^u-([^-].*)": "@/uni_modules/uview-plus/components/u-$1/u-$1.vue",
-			
+
 			// 自定义组件
 			"gbScroll": "@/components/gb-scroll/gb-scroll.vue",
 			"indexList": "@/components/index/index-list.vue",
@@ -26,11 +26,11 @@
 			"topDec": "@/components/common/top-dec.vue"
 		}
 	},
-		
+
 	"pages": [
 		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		
-		
+
+
 		{
 			"path": "pages/home/index",
 			"style": {
@@ -41,7 +41,7 @@
 				// }
 			}
 		},
-		
+
 		{
 			"path": "pages/cps/goods-details",
 			"style": {
@@ -52,7 +52,7 @@
 				// }
 			}
 		},
-		
+
 		// {
 		// 	"path": "pages/cps/cps-618",
 		// 	"style": {
@@ -69,7 +69,7 @@
 				"navigationBarTitleText": "登录"
 			}
 		},
-		
+
 		{
 			"path": "pages/my/user-agreement",
 			"style": {
@@ -82,7 +82,7 @@
 				"navigationBarTitleText": "隐私政策"
 			}
 		},
-		
+
 		{
 			"path": "pages/aichat/chat",
 			"style": {
@@ -99,7 +99,7 @@
 				"navigationBarTitleText": "搜索商品"
 			}
 		},
-		
+
 		{
 			"path": "pages/cps/cps",
 			"style": {
@@ -110,14 +110,14 @@
 				// }
 			}
 		},
-		
+
 		{
 			"path": "pages/cps/cps-list",
 			"style": {
 				"navigationBarTitleText": "我的订单"
 			}
 		},
-		
+
 		{
 			"path": "pages/wallet/wallet",
 			"style": {
@@ -136,7 +136,7 @@
 				"navigationBarTitleText": "提现"
 			}
 		},
-		
+
 		// // 个人信息
 		{
 			"path": "pages/my/my-data",
@@ -158,7 +158,7 @@
 			"path": "pages/my/sys-setting",
 			"style": {}
 		}
-		
+
 		// {
 		// 	"path": "pages/login/first-enter",
 		// 	"style": {
@@ -184,7 +184,7 @@
 			"navigationBarBackgroundColor": "#F1F1F1"
 		}
 	},
-	
+
 	"condition" : { 	//模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [
@@ -208,7 +208,7 @@
 				"path": "pages/login/login", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			},
-			
+
 			{
 				"name": "618活动", //模式名称
 				"path": "pages/cps/cps-618", //启动页面，必选
@@ -230,7 +230,7 @@
 			// 	"query": "gh_openid=oWX3e6hNm7M_7vA5diqEbO4Z5yqc&scnr=referal" //启动参数，在页面的onLoad函数里面得到
 			// },
 			// {
-			// 	"name": "观看视频入围拆盲盒", 
+			// 	"name": "观看视频入围拆盲盒",
 			// 	"path": "sub_pkgs/ads/reward/reward", //启动页面，必选
 			// 	"query": "gh_openid=oWX3e6r6Qyo50DhqAymoE-WHSkPc&scnr=wx_transfer&amount=10" //启动参数，在页面的onLoad函数里面得到
 			// }
@@ -244,18 +244,18 @@
 		"list": [
 			{
 				"pagePath": "pages/home/index",
-				"iconPath": "static/img/tabbar/home.png",
-				"selectedIconPath": "static/img/tabbar/homeactive.png",
+				"iconPath": "/static/img/tabbar/home-style.png",
+				"selectedIconPath": "/static/img/tabbar/home-style-active.png",
 				"text": "首页"
 			},
-			
+
 			{
 				"pagePath": "pages/aichat/chat",
-				"iconPath": "/static/img/tabbar/aichat.png",
-				"selectedIconPath": "/static/img/tabbar/aichat_active.png",
+				"iconPath": "/static/img/tabbar/aichat-style.png",
+				"selectedIconPath": "/static/img/tabbar/aichat-style-active.png",
 				"text": "AI助手"
 			},
-			
+
 			//#ifdef MP-WEIXIN
 			// {
 			// 	"pagePath": "pages/tabbar/tabbar-3/tabbar-3",
@@ -264,11 +264,11 @@
 			// 	"text": "发布"
 			// },
 			//#endif
-			
+
 			{
 				"pagePath": "pages/cps/cps",
-				"iconPath": "static/img/tabbar/me.png",
-				"selectedIconPath": "static/img/tabbar/meactive.png",
+				"iconPath": "/static/img/tabbar/me-style.png",
+				"selectedIconPath": "/static/img/tabbar/me-style-active.png",
 				"text": "我的"
 			}
 		]
