@@ -19,7 +19,7 @@
 				
 				<view class="dflex flex-row justify-space-between align-center" style="width: 100%;" v-if="index==3">
 					<text class="mar-r30 fs-30 f-w">个性化推荐</text>
-					<switch checked />
+					<switch :checked="personalizedRecommend" @change="onRecommendChange" />
 					
 				</view>
 				
@@ -77,6 +77,8 @@ const userStore = useUserAuthStore()
 
 const isShow = ref(false)
 const noClick = ref(true)
+const personalizedRecommend = ref(true)
+const PERSONALIZED_RECOMMEND_KEY = 'personalizedRecommend'
 
 // 设置列表
 const setup_list = ref([
@@ -108,8 +110,17 @@ const setup_list = ref([
 
 // onLoad 生命周期
 onLoad(() => {
-	
+	const savedRecommend = uni.getStorageSync(PERSONALIZED_RECOMMEND_KEY)
+	if (typeof savedRecommend === 'boolean') {
+		personalizedRecommend.value = savedRecommend
+	}
 })
+
+// 保存个性化推荐开关状态
+const onRecommendChange = (event: any) => {
+	personalizedRecommend.value = Boolean(event.detail.value)
+	uni.setStorageSync(PERSONALIZED_RECOMMEND_KEY, personalizedRecommend.value)
+}
 
 // 显示/隐藏弹窗
 const show = () => {
