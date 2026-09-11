@@ -55,7 +55,8 @@
             },
             /* ios打包配置 */
             "ios" : {
-                "dSYMs" : false
+                "dSYMs" : false,
+                "urltypes" : "zhs"
             },
             /* SDK配置 */
             "sdkConfigs" : {
@@ -69,7 +70,16 @@
                 "push" : {
                     "unipush" : {
                         "version" : "2",
-                        "offline" : false
+                        "offline" : false,
+                        "icons" : {
+                            "small" : {
+                                "ldpi" : "/Users/xl/Documents/应用上架/ios/logo-18.png",
+                                "mdpi" : "/Users/xl/Documents/应用上架/ios/logo-24.png",
+                                "hdpi" : "/Users/xl/Documents/应用上架/ios/logo-36.png",
+                                "xhdpi" : "/Users/xl/Documents/应用上架/ios/logo-48.png",
+                                "xxhdpi" : "/Users/xl/Documents/应用上架/ios/logo-72.png"
+                            }
+                        }
                     }
                 },
                 "share" : {
@@ -81,7 +91,28 @@
             },
             "icons" : {
                 "ios" : {
-                    "appstore" : "/Users/xl/Documents/上海众阚/甄慧省/logo.png"
+                    "appstore" : "/Users/xl/Documents/上海众阚/甄慧省/logo.png",
+                    "iphone" : {
+                        "app@2x" : "/Users/xl/Documents/应用上架/ios/logo-120.png",
+                        "app@3x" : "/Users/xl/Documents/应用上架/ios/logo-180.png",
+                        "spotlight@3x" : "/Users/xl/Documents/应用上架/ios/logo-120.png",
+                        "spotlight@2x" : "/Users/xl/Documents/应用上架/ios/logo-80.png",
+                        "settings@2x" : "/Users/xl/Documents/应用上架/ios/logo-58.png",
+                        "settings@3x" : "/Users/xl/Documents/应用上架/ios/logo-87.png",
+                        "notification@2x" : "/Users/xl/Documents/应用上架/ios/logo-40.png",
+                        "notification@3x" : "/Users/xl/Documents/应用上架/ios/logo-60.png"
+                    },
+                    "ipad" : {
+                        "app" : "/Users/xl/Documents/应用上架/ios/logo-76.png",
+                        "app@2x" : "/Users/xl/Documents/应用上架/ios/logo-152.png",
+                        "proapp@2x" : "/Users/xl/Documents/应用上架/ios/logo-167.png",
+                        "spotlight" : "/Users/xl/Documents/应用上架/ios/logo-40.png",
+                        "spotlight@2x" : "/Users/xl/Documents/应用上架/ios/logo-80.png",
+                        "settings" : "/Users/xl/Documents/应用上架/ios/logo-29.png",
+                        "settings@2x" : "/Users/xl/Documents/应用上架/ios/logo-58.png",
+                        "notification" : "/Users/xl/Documents/应用上架/ios/logo-20.png",
+                        "notification@2x" : "/Users/xl/Documents/应用上架/ios/logo-40.png"
+                    }
                 },
                 "android" : {
                     "hdpi" : "/Users/xl/Documents/上海众阚/荣耀市场/logos/logo-72.png",
