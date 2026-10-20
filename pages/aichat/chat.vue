@@ -19,7 +19,7 @@
 			
 			<!-- 小助手回复&用户发送的消息 -->
 			<uni-ai-msg v-for="(msg,index) in msgList" :key="index" :msg="msg" @changeAnswer="changeAnswer"
-				:show-cursor="index == msgList.length - 1 && msgList.length%2 === 0 && !isMsgFinished"
+				:show-cursor="index == msgList.length - 1 && msgList.length%2 === 0 && sseIndex !== 0 && !isMsgFinished"
 				:isAd=isChatAd
 				:isAiFinish="sseIndex === 0"
 				:isLastMsg="index == msgList.length - 1" @removeMsg="removeMsg(index)">

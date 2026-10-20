@@ -267,6 +267,7 @@
 					return //处理特殊情况，比如网络异常导致的响应的 content 的值为空
 				}
 				let htmlString = ''
+				const cursor = this.showCursor ? ' <span class="cursor" style="color:gray">●</span>' : ''
 				// 修改转换结果的htmlString值 用于正确给界面增加鼠标闪烁的效果
 				// 判断markdown中代码块标识符的数量是否为偶数
 				if (this.msgContent.split("```").length % 2) {
@@ -274,10 +275,10 @@
 					// if(msgContent[msgContent.length-1] != '\n'){
 					// 	msgContent += '\n'
 					// }
-					msgContent += ' <span class="cursor" style="color:gray">●</span>'
+					msgContent += cursor
 					htmlString = markdownIt.render(msgContent);
 				} else {
-					htmlString = markdownIt.render(this.msgContent) + ' \n <span class="cursor" style="color:gray">●</span>';
+					htmlString = markdownIt.render(this.msgContent) + cursor;
 				}
 
 				// #ifndef APP-NVUE

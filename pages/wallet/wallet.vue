@@ -94,7 +94,7 @@
 		<view style="height: 130rpx;"></view>
 		
 		<!-- 按钮 -->
-		<doubleButton left_name="查看明细" right_name="申请提现"  @l-event="navTo('/pages/wallet/money-detail')"
+		<doubleButton left_name="查看明细" right_name="申请提现" :right_disable="rightDisable" @l-event="navTo('/pages/wallet/money-detail')"
 			@r-event="withdrawalAdd">
 		</doubleButton>
 	</view>
@@ -110,7 +110,10 @@ import { useUserAuthStore } from '@/store/user-auth'
 const userStore = useUserAuthStore()
 
 // 页面数据
-const rightDisable = ref(false)
+const rightDisable = computed(() => {
+	const withdrawalAmount = Number(walletTabBars.value[tabIndex.value]?.money || 0)
+	return income.value < withdrawalAmount
+})
 const noClick = ref(true)
 const tabIndex = ref(0)
 const radio = ref(0)
@@ -178,7 +181,7 @@ onLoad((e: any) => {
 onShow(() => {
 	// isxcx.value = uni.getStorageSync("isxcx") || false
 	// myRestitutionMoney()
-	// getMoney()
+	getMoney()
 })
 
 // 导航栏按钮点击
@@ -299,6 +302,13 @@ const getMoney = async () => {
 
 // 提现：调用微信商家转账功能
 const withdrawalAdd = async () => {
+	if (rightDisable.value) {
+		uni.showToast({
+			title: '余额不足，无法提现',
+			icon: 'none'
+		})
+		return
+	}
 	
 	// #ifdef MP-WEIXIN
 
@@ -316,7 +326,7 @@ const withdrawalAdd = async () => {
 	let draw_money = walletTabBars.value[tabIndex.value].money
 	console.log("提取金额:", draw_money, userStore.userinfo)
 	
-	let incomeData = Number(userStore.userinfo.income) || 0.0
+	let incomeData = income.value
 	// 判断是否有足够的余额
 	if (draw_money > incomeData) {
 		uni.showToast({
