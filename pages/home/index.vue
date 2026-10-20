@@ -94,6 +94,15 @@
 			</up-scroll-list>
 		</view>
 
+		<!-- 电商活动区 -->
+		<view class="ecommerce-activity mar-b5" @click="openEcommerceActivity">
+			<image
+				class="ecommerce-activity-image"
+				:src="ecommerceActivity.image"
+				mode="widthFix"
+			/>
+		</view>
+
 		<!-- 电商菜单 -->
 		<u-sticky :bg-color="'rgba(255,255,255,0.96)'" :offset-top="searchBarStickyHeight">
 		<view class="ecom-menu mar-b5">
@@ -349,6 +358,12 @@ const duration = ref(500)
 // 轮播图片
 const hotGoods = ref<any[]>([])
 
+// 首页电商活动卡片。图片使用现有 CDN 活动图，点击后拉起对应 App。
+const ecommerceActivity = {
+	image: config.static + '/cart-coupon-2026.jpeg',
+	deeplink: "tbopen://m.taobao.com/tbopen/index.html?action=ali.open.nav&module=h5&source=alimama&bc_fl_src=tunion_mm_mm&h5Url=https%3A%2F%2Fs.click.taobao.com%2FLHt7Lci"
+}
+
 // 商品信息
 const goodsDec = ref(null)
 const pageId = ref(1)
@@ -597,6 +612,27 @@ const clickSwiper = (index: number) => {
 		index: index,
 		goods: hotGoods.value[index]
 	});
+}
+
+// 点击电商活动卡片
+const openEcommerceActivity = () => {
+	// #ifdef APP
+	if (canOpenURL(ecommerceActivity.deeplink)) {
+		openSchema(ecommerceActivity.deeplink)
+	} else {
+		uni.showToast({
+			title: '未安装淘宝App，请先安装后再试',
+			icon: 'none'
+		})
+	}
+	// #endif
+
+	// #ifndef APP
+	uni.showToast({
+		title: '请在 App 中打开此活动',
+		icon: 'none'
+	})
+	// #endif
 }
 
 // 点击本地服务
@@ -1067,6 +1103,23 @@ onBackPress(() => {
 	aspect-ratio: 16 / 9;
 	border-radius: 20rpx;
 	margin-top: 10rpx;
+}
+
+.ecommerce-activity {
+	width: 100%;
+	height: auto;
+	min-height: 0;
+	flex: 0 0 auto;
+	flex-shrink: 0;
+	border-radius: 20rpx;
+	overflow: hidden;
+	background-color: #fff;
+}
+
+.ecommerce-activity-image {
+	display: block;
+	width: 100%;
+	height: auto;
 }
 
 .search-bar {
