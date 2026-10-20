@@ -107,17 +107,15 @@
 		<u-sticky :bg-color="'rgba(255,255,255,0.96)'" :offset-top="searchBarStickyHeight">
 		<view class="ecom-menu mar-b5">
 			<!-- <u-sticky :bg-color="'#f2f'>" -->
-				<up-tabs @click="clickCatTab" :list="cats"
-					:line-width="'35'"
+				<up-tabs @click="clickCatTab" :list="cats" :current="current_tab"
+					:line-width="35"
 					:line-color="'#f56c6c'"
 					:active-style="{
 						color: '#303133',
-						fontWeight: 'bold',
-						transform: 'scale(1.05)'
+						fontWeight: 'bold'
 					}"
 					:inactive-style="{
-						color: '#606266',
-						transform: 'scale(1)'
+						color: '#606266'
 					}"
 					item-style="padding-left: 15px; padding-right: 15px; height: 34px;"
 				></up-tabs>
@@ -131,7 +129,7 @@
 				<image :src="config.static+'/loading.gif'" mode="widthFix" class="wh-80"></image>
 			</view>
 
-			<view class="" v-for="(item, index) in goods_list" :key="item.goodsId">
+      <view :class="index === 0 ? 'mar-t20' : ''" v-for="(item, index) in goods_list" :key="item.goodsId">
 
 				<!-- 微信原生模板广告 -->
 				<!-- <view v-if="index === 0 && (uid !== '67691dcdd121ac433df0b126' && uid !== '67b7f41a8dc8c182c3fd1ad3')"
