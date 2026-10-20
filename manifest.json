@@ -62,10 +62,10 @@
                 "oauth" : {
                     "univerify" : {},
                     "weixin" : {
-                        "appid" : "wx54efa376148ca52c",
-                        "UniversalLinks" : ""
+                        "appid" : "wx54efa376148ca52c"
                     }
                 },
+                // "UniversalLinks" : ""
                 "push" : {
                     "unipush" : {
                         "version" : "2",
@@ -74,11 +74,11 @@
                 },
                 "share" : {
                     "weixin" : {
-                        "appid" : "wx54efa376148ca52c",
-                        "UniversalLinks" : ""
+                        "appid" : "wx54efa376148ca52c"
                     }
                 }
             },
+            // "UniversalLinks" : ""
             "icons" : {
                 "ios" : {
                     "appstore" : "/Users/xl/Documents/上海众阚/甄慧省/logo.png"
