@@ -2,7 +2,7 @@
 	<view>
 		<!-- 余额明细 -->
 		<view class="zcolor-while mar-30 bor-r30 pa-30" style="position: relative;">
-			
+
 			<view class="dflex flex-row justify-space-between align-center">
 				<topDec name="账户余额"></topDec>
 				<view class="dflex flex-row align-center" @click="navTo('/pages/cps/cps-list')">
@@ -12,18 +12,18 @@
 					<uni-icons type="right" color="#cccccc" size="17"></uni-icons>
 				</view>
 			</view>
-			
+
 			<view class=" dflex flex-row align-center justify-space-between mar-t60"  @click="navTo('/pages/wallet/money-detail')">
 				<text class="fs-40 f-w fcolor-red ">{{ parseFloat(income).toFixed(2) }}</text>
 			</view>
-			
+
 			<view class="zcolor-while1 dflex justify-center align-center"
 				style="width: 170rpx; height: 70rpx;position: absolute;bottom: 30rpx; right: 0rpx;border-top-left-radius: 50rpx;border-bottom-left-radius: 50rpx;"
 				@click="navTo('../wallet/money-detail')">
 				<text class="fs-28  f-w">查看明细</text>
 			</view>
 		</view>
-		
+
 		<!-- 提现金额门槛 -->
 		<view class="zcolor-while mar-30 bor-r30 pa-30" style="margin-top: 0;">
 			<topDec name="提现金额"></topDec>
@@ -37,7 +37,19 @@
 				</view>
 			</view>
 		</view>
-		
+
+		<!-- 提现规则说明 -->
+		<view class="withdraw-rules zcolor-while mar-30 bor-r30 pa-30">
+			<topDec name="提现说明"></topDec>
+			<view class="withdraw-rules__body mar-t15">
+				<text class="withdraw-rules__item">最低提现金额：余额满 30 元可申请，当前可选 30、50、100、200 元档位。</text>
+				<text class="withdraw-rules__item">提现路径：达到所选金额后点击“申请提现”，系统通过微信商家转账自动向当前绑定微信账号发送转账金额。</text>
+				<text class="withdraw-rules__item">到账时间：通常在工作日内 24 小时到账；到账时间可能受微信处理及审核影响。</text>
+				<text class="withdraw-rules__item">单日提现次数：按平台当日规则执行，具体以提交时系统提示为准。</text>
+				<text class="withdraw-rules__item">提现次数：每次申请选择一个金额档位；可申请次数及可提现余额以页面和系统校验结果为准。</text>
+			</view>
+		</view>
+
 		<!-- 提现方式 -->
 		<!-- #ifdef APP -->
 		<view class="zcolor-while mar-30 bor-r30 pa-30" style="margin-top: 0;" v-if="isxcx">
@@ -49,7 +61,7 @@
 				</view>
 			</view> -->
 			<!-- <radio-group class="mar-t30" @change="zhClass"> -->
-				
+
 				<!-- <label class="dflex flex-row justify-space-between align-center mar-t15">
 					<view class="dflex flex-row align-center">
 						<image src="../../static/zfb.png" mode="widthFix" class="wh-60"></image>
@@ -57,7 +69,7 @@
 					</view>
 					<radio value="0" color="#000000" checked="true" style="transform:scale(0.7)" />
 				</label> -->
-				
+
 				<!-- <label class="dflex flex-row justify-space-between align-center mar-t30">
 					<view class="dflex flex-row align-center">
 						<image src="../../static/spread/wx.png" class="wh-65" mode="widthFix"></image>
@@ -67,14 +79,14 @@
 				</label> -->
 			<!-- </radio-group> -->
 		</view>
-		
+
 		<!-- <view class="zcolor-while mar-30 bor-r30 pa-30" style="margin-top: 0;" v-else>
 			<view class="dflex flex-row justify-space-between align-center">
 				<topDec name="提现方式"></topDec>
-				
+
 			</view>
 			<radio-group class="mar-t30" @change="zhClass">
-				
+
 				<label class="dflex flex-row justify-space-between align-center mar-t30">
 					<view class="dflex flex-row align-center">
 						<image src="../../static/spread/wx.png" class="wh-65" mode="widthFix"></image>
@@ -85,14 +97,14 @@
 			</radio-group>
 		</view> -->
 		<!-- #endif -->
-		
+
 		<!-- 需要注册插件 -->
 		<!-- <view class="mar-30 bor-r30  gradient-green-while" style="margin-top: 0;" v-if="isAd">
 			<ad :ad-pid="$store.state.adList.xxl" @load="onload" @close="onclose" @error="onerror"></ad>
 		</view> -->
-		
+
 		<view style="height: 130rpx;"></view>
-		
+
 		<!-- 按钮 -->
 		<doubleButton left_name="查看明细" right_name="申请提现" :right_disable="rightDisable" @l-event="navTo('/pages/wallet/money-detail')"
 			@r-event="withdrawalAdd">
@@ -154,8 +166,8 @@ const walletTabBars = ref([
 // onLoad 生命周期
 onLoad((e: any) => {
 	// await getApp().initCtx()
-	
-	// 
+
+	//
 	// let obj = {
 	// 	name: "mp-money-update",
 	// 	action: 'updateMoney/getUserInfo',
@@ -166,10 +178,10 @@ onLoad((e: any) => {
 	// let user_result = await Api.cloudHttp(obj)
 	// let userinfo = user_result.result.data.data[0]
 	// console.log('userinfo:', userinfo);
-	
+
 	// let draw_money = walletTabBars.value[tabIndex.value].money
 	// console.log("提取金额:", draw_money, userStore.userinfo)
-	
+
 	// let income = userStore.userinfo.income || 0.0
 	// 判断是否有足够的余额
 	// if (draw_money > income) {
@@ -202,7 +214,7 @@ onHide(() => {
 // 待返金额查询
 const myRestitutionMoney = async () => {
 	try {
-		
+
 		let fn_result = await uniCloud.callFunction({
 			name: 'cps',
 			data: {
@@ -211,21 +223,21 @@ const myRestitutionMoney = async () => {
 				}
 			}
 		})
-		
+
 		console.log('res:', fn_result)
-			
+
 		if (fn_result.result.code !== 0) {
 			Common.showToast(fn_result.result.message)
-			
+
 			if (fn_result.result.code === 403) {
 				Common.clearInfo()
 			}
 			return
 		}
-		
+
 		restitutionMoney.value = (fn_result.result.money || 0).toFixed(2)
 	} catch (e: any) {
-		
+
 		console.log('e:', e)
 	}
 }
@@ -278,25 +290,25 @@ const getMoney = async () => {
 			}
 		}
 	})
-	
+
 	console.log("\n#getMoney: \n", fn_result)
-	
+
 	if (fn_result.result.code !== 0) {
 		Common.showToast(fn_result.result.message)
-		
+
 		if (fn_result.result.code === 403) {
 			Common.clearInfo()
 		}
 		return
 	}
-	
+
 	let data = fn_result.result.data[0]
 	income.value = Number((data.income).toFixed(2)) || 0.0
-	
+
 	const bouns_coin = data.bouns_coin || 0
 	alipay.value = data.alipay || ''
 	name.value = data.name || ''
-	
+
 	const bouns_status = data.bouns_status || 0
 }
 
@@ -309,7 +321,7 @@ const withdrawalAdd = async () => {
 		})
 		return
 	}
-	
+
 	// #ifdef MP-WEIXIN
 
 	// let obj = {slr-e-r0g0og9,
@@ -322,10 +334,10 @@ const withdrawalAdd = async () => {
 	// let user_result = await Api.cloudHttp(obj)
 	// let userinfo = user_result.result.data.data[0]
 	// console.log('userinfo:', userinfo);
-	
+
 	let draw_money = walletTabBars.value[tabIndex.value].money
 	console.log("提取金额:", draw_money, userStore.userinfo)
-	
+
 	let incomeData = income.value
 	// 判断是否有足够的余额
 	if (draw_money > incomeData) {
@@ -337,36 +349,36 @@ const withdrawalAdd = async () => {
 		})
 		return
 	}
-	
+
 	// 获取 unionid
 	const loginRes = await uni.login({
 		provider: "weixin"
 	})
-	
+
 	if (loginRes.errMsg === 'getUserProfile:ok' || loginRes.errMsg === 'login:ok') {
 		const userInfo = await uni.getUserInfo({
 			provider: "weixin"
 		})
-			
+
 		console.log("loginRes", loginRes)
 		console.log("userInfo", userInfo)
-			
+
 		const mp_result = await uniCloud.callFunction({
 			name: 'mp-unionid',
 			data: {
 				code: loginRes.code
 			}
 		})
-		
+
 		let unionid = mp_result.result.data.unionid
 		console.log("unionid result:", mp_result)
-		
+
 		// 原始数据
 		let curtime = new Date().getTime()
 		let draw_token = unionid + '@' + draw_money + '@' + userStore.userinfo._id + '@' + curtime
-		
+
 		// 调用云函数对上面的 token 进行加密
-		
+
 		// 加密数据
 		let obj = {
 			name: "mp-money-update",
@@ -375,7 +387,7 @@ const withdrawalAdd = async () => {
 				token: draw_token
 			}
 		}
-		
+
 		const encrypt_result = await uniCloud.callFunction({
 			name: 'encrypt',
 			data: {
@@ -383,21 +395,21 @@ const withdrawalAdd = async () => {
 			}
 		})
 		console.log("加密后的数据:", encrypt_result)
-		
+
 		// uni.showModal({
 		// 	title: '余额提现',
 		// 	content: '点击「确定」，按照流程进行提现。',
 		// 	success(res: any) => {
 		// 		if (res.confirm) {
 		// 			console.log('用户点击了确定');
-					
+
 		// 			// f(提现金额 & Unionid & 提现码)=token
 		// 			console.log("draw_token:", encrypt_result)
 		// 			uni.setClipboardData({
 		// 				data: '$' + encrypt_result,
 		// 				success(() => {
 		// 					console.log("复制 token 到剪贴板:", encrypt_result)
-							
+
 		// 					uni.showToast({
 		// 						title: "提现码已复制到剪贴板",
 		// 						icon: 'none',
@@ -408,40 +420,40 @@ const withdrawalAdd = async () => {
 		// 					console.log('失败', error)
 		// 				})
 		// 			})
-					
+
 		// 			console.log("wallet app globalData:", getApp().globalData)
 		// 			let mp_url = getApp().globalData.mp_url
-					
+
 		// 			uni.navigateTo({
 		// 				url: '/pages/web/web?link=' + mp_url,
 		// 				fail(err: any) => {
 		// 					console.error('资金明细页面跳转失败', err)
 		// 				}
 		// 			})
-					
+
 		// 		} else if (res.cancel) {
 		// 			console.log('用户点击取消');
 		// 		}
 		// 	}
 		// })
-		
+
 	} else {
-		
+
 		uni.showToast({
 			title: "微信登录失败",
 			icon: "none"
 		})
 	}
-	
+
 	// #endif
-	
+
 	// -----判断
 	// if (!noClick.value) {
 	// 	Common.showToast('请勿频繁点击')
 	// 	return
 	// }
 	// noClick.value = false;
-	
+
 	// // 判断结束开始请求
 	// Common.showLoading('提现中...')
 	// let yzDate = new Date().getTime()
@@ -478,5 +490,20 @@ const withdrawalAdd = async () => {
 </script>
 
 <style>
+.withdraw-rules {
+	margin-top: 0;
+}
+
+.withdraw-rules__body {
+	display: flex;
+	flex-direction: column;
+}
+
+.withdraw-rules__item {
+	font-size: 25rpx;
+	line-height: 1.7;
+	color: #666;
+	margin-top: 10rpx;
+}
 
 </style>
