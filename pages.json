@@ -34,7 +34,8 @@
 		{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "甄慧省"
+				"navigationBarTitleText": "甄慧省",
+				"onReachBottomDistance": 100
 				// "navigationStyle": "custom",	//自定义导航栏
 				// "app-plus": {
 				// 	// "titleNView": false

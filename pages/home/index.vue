@@ -35,6 +35,10 @@
 				/>
 
 			</view>
+			<view v-if="showRefreshButton" class="home-refresh" @click="refreshCurrentCategory">
+				<uni-icons type="refreshempty" size="16" color="#f56c6c"></uni-icons>
+				<text>刷新当前类目</text>
+			</view>
 		</u-sticky>
 
 		<!-- 热门活动区 -->
@@ -42,7 +46,7 @@
 			<u-swiper class="hot-swiper"
 				@click="clickSwiper"
 				:list="hotGoods"
-				height="190"
+				height="152"
 				:key-name="'url'"
 				:indicator-active-color="'#f56c6c'"
 				:indicator-inactive-color="'#e6e6e6'"
@@ -129,61 +133,43 @@
 				<image :src="config.static+'/loading.gif'" mode="widthFix" class="wh-80"></image>
 			</view>
 
-      <view :class="index === 0 ? 'mar-t20' : ''" v-for="(item, index) in goods_list" :key="item.goodsId">
-
-				<!-- 微信原生模板广告 -->
-				<!-- <view v-if="index === 0 && (uid !== '67691dcdd121ac433df0b126' && uid !== '67b7f41a8dc8c182c3fd1ad3')"
-					@tap="wxtap"
-					@click.capture="wxAdClickCapture"
-					class="dflex flex-row align-center zcolor-while bor-r20 mar-b20 mar-t15">
-					<ad-custom id="mywxid" ref="wxad" class="wx-ad" style="width:100%;" unit-id="adunit-0ef5bbb7f19b4722" @bindclick="adWxClick" @bindload="adWxLoad" @binderror="adWxError" @bindclose="adWxClose"></ad-custom>
-				</view> -->
-
-				<!-- <view v-if="index==1"
-					class="uniad-view">
-					<ad adpid="1202679606" @load="uni_onload" @close="uni_onclose" @error="uni_onerror"></ad>
-				</view> -->
-
-				<view class="dflex flex-row align-center zcolor-while bor-r20 mar-b20"
-					 @click="goodsDesc(item)">
-
-					<view class="pa-10">
-						<image :src="item.goodsThumbUrl" mode="aspectFill" class="wh-200 bor-r20" />
+			<view class="goods-waterfall" v-if="goods_list.length">
+				<view class="goods-waterfall__column">
+					<view class="goods-card" v-for="item in leftGoods" :key="item.goodsId" @click="goodsDesc(item)">
+						<image :src="item.goodsThumbUrl" mode="widthFix" class="goods-card__image" />
+						<view class="goods-card__content">
+							<text class="goods-card__title">{{ item.goodsName || '' }}</text>
+							<view class="goods-card__meta">
+								<text v-if="source === 'vip'" class="goods-card__highlight">{{ (item.discount * 10).toFixed(0) }}折</text>
+								<text v-else class="goods-card__highlight">省 {{ item.discount }} 元</text>
+								<text v-if="item.sales_tip" class="goods-card__sales">已售 {{ item.sales_tip }}件</text>
+							</view>
+							<view class="goods-card__footer">
+								<view><text class="goods-card__price-label">到手 </text><text class="goods-card__price">¥{{ item.finalPrice }}</text></view>
+								<view class="goods-card__shop">
+									<text v-if="item.shopName">{{ item.shopName }}</text>
+									<image :src="config.static + '/' + item.source + '.png'" mode="aspectFill" class="goods-card__source" />
+								</view>
+							</view>
+						</view>
 					</view>
-					<view class="mar-l15">
-						<view class="">
-							<text class="fs-30 f-w"
-								style="width: 400rpx;">{{ (item.goodsName || '').substr(0, 25) + '...' }}</text>
-						</view>
-						<view class="dflex flex-row align-center  mar-t25">
-							<view class="justify-center align-center">
-								<view v-if="source === 'vip'">
-									<text class="fs-25 fcolor-dark1">折扣：</text>
-									<text class="fs-25 fcolor-red f-w">{{ (item.discount * 10).toFixed(0) }}折</text>
-								</view>
-								<view v-else>
-									<text class="fs-25 fcolor-dark1">省：</text>
-									<text class="fs-25 fcolor-red f-w">{{ item.discount }}元</text>
-								</view>
+				</view>
+				<view class="goods-waterfall__column">
+					<view class="goods-card" v-for="item in rightGoods" :key="item.goodsId" @click="goodsDesc(item)">
+						<image :src="item.goodsThumbUrl" mode="widthFix" class="goods-card__image" />
+						<view class="goods-card__content">
+							<text class="goods-card__title">{{ item.goodsName || '' }}</text>
+							<view class="goods-card__meta">
+								<text v-if="source === 'vip'" class="goods-card__highlight">{{ (item.discount * 10).toFixed(0) }}折</text>
+								<text v-else class="goods-card__highlight">省 {{ item.discount }} 元</text>
+								<text v-if="item.sales_tip" class="goods-card__sales">已售 {{ item.sales_tip }}件</text>
 							</view>
-
-							<text v-if="item.sales_tip" class="fs-18 fcolor-dark1 mar-l10 mar-10">|</text>
-							<view v-if="item.sales_tip" class="justify-center align-center">
-								<text class="fs-25 fcolor-dark1">已售：</text>
-								<text class="fs-25 fcolor-red f-w">{{ item.sales_tip }}件</text>
-							</view>
-						</view>
-						<view class="dflex flex-row justify-space-between align-center mar-t25">
-							<view class="dflex flex-row u-flex-items-center">
-								<text class="fs-25 fcolor-dark2 mar-r10">到手： </text>
-								<view class="dflex flex-row align-flex-end align-center">
-									<text class="fs-28 fcolor-red">¥</text>
-									<text class="fs-35 fcolor-red f-w mar-l10">{{ item.finalPrice }}</text>
+							<view class="goods-card__footer">
+								<view><text class="goods-card__price-label">到手 </text><text class="goods-card__price">¥{{ item.finalPrice }}</text></view>
+								<view class="goods-card__shop">
+									<text v-if="item.shopName">{{ item.shopName }}</text>
+									<image :src="config.static + '/' + item.source + '.png'" mode="aspectFill" class="goods-card__source" />
 								</view>
-							</view>
-							<view class="dflex flex-row align-center">
-								<text v-if="item.shopName" class="fs-25 fcolor-dark1">{{ (item.shopName || '').substr(0, 8) + "..." }}</text>
-								<image :src="config.static + '/'+item.source+'.png'" mode="aspectFill" class="bor-r100 wh-40" />
 							</view>
 						</view>
 					</view>
@@ -194,7 +180,9 @@
 			<noThing v-if="!loading && goods_list.length < 1"></noThing>
 
 			<!-- 上拉加载 -->
-			<loadMore v-if="goods_list.length > 8" :loading="loading" :hasMore="hasMore"></loadMore>
+			<view v-if="goods_list.length > 8" @click="loadMoreGoods">
+				<loadMore :loading="loading" :hasMore="hasMore"></loadMore>
+			</view>
 		</view>
 
 	</view>
@@ -248,6 +236,9 @@ const keyword = ref('')
 const source = ref('pdd')
 const loading = ref(true)
 const goods_list = ref<any[]>([])
+const leftGoods = computed(() => goods_list.value.filter((_item, index) => index % 2 === 0))
+const rightGoods = computed(() => goods_list.value.filter((_item, index) => index % 2 === 1))
+const showRefreshButton = ref(false)
 
 // console.log('\n#localLiving: ',lf, Api)
 const local_living = lf.localLiving()
@@ -377,8 +368,8 @@ const handleScrolltolower = (e) => {
 // 获取猜你喜欢商品
 
 const fetchGuessGoods = async () => {
-
-	return uniCloud.callFunction({
+	try {
+		const res = await uniCloud.callFunction({
 		name: 'cps',
 		data: {
 			action: 'core/homeRecommend',
@@ -387,23 +378,21 @@ const fetchGuessGoods = async () => {
 				page_size: pageSize.value
 			}
 		}
-	}).then(res => {
+		})
+		const result = Array.isArray(res.result) ? res.result : []
 		console.log("\nguess goods result:\n", res)
-
-		if (res.result.length > 0) {
-			console.log("猜你喜欢&为你推荐结果:", res.result[0])
-
-			goods_list.value.push(...res.result)
-		} else {
-			console.log("猜你喜欢&为你推荐结果错误:", res)
-		}
-
+		if (result.length) goods_list.value.push(...result)
+		// 接口可能返回不足一页的数据；只有空页才表示没有下一页。
+		if (result.length === 0) hasMore.value = false
 		current_tab.value = 0
+		return result
+	} catch (error) {
+		console.log('请求猜你喜欢商品失败:', error)
+		throw error
+	} finally {
 		loading.value = false
-	}).catch(error => {
-		console.log('请求 fetchHotGoods 错误:', error)
-	});
-
+		setTimeout(checkGoodsListBottom, 100)
+	}
 }
 
 // 获取热门商品
@@ -454,9 +443,13 @@ const fetchTabGoods = (tab_index: number) => {
 				}
 			}
 		}).then(res => {
-			goods_list.value.push(...res.result)
+			const result = Array.isArray(res.result) ? res.result : []
+			goods_list.value.push(...result)
+			if (result.length === 0) hasMore.value = false
 
 			loading.value = false
+			setTimeout(checkGoodsListBottom, 100)
+			return result
 		})
 
 	}
@@ -472,7 +465,10 @@ const clickCatTab = (tab: any) => {
 	loading.value = true
 	if (tab.index !== current_tab.value) {
 		goods_list.value.length = 0
+		pageId.value = 1
+		hasMore.value = true
 	}
+	showRefreshButton.value = false
 
 	if (tab_index === 0) {		// 猜你喜欢
 
@@ -492,7 +488,9 @@ const clickCatTab = (tab: any) => {
 			}
 		})
 		.then(res => {
-			goods_list.value.push(...res.result)
+			const result = Array.isArray(res.result) ? res.result : []
+			goods_list.value.push(...result)
+			hasMore.value = result.length > 0
 
 			current_tab.value = tab.index
 			loading.value = false
@@ -500,6 +498,7 @@ const clickCatTab = (tab: any) => {
 			if ('badge' in cats.value[current_tab.value] && 'isDot' in cats.value[current_tab.value].badge) {
 				cats.value[current_tab.value].badge.isDot = false
 			}
+			setTimeout(checkGoodsListBottom, 100)
 		})
 
 	}
@@ -837,14 +836,14 @@ onReady(() => {
 })
 
 const loadMoreGoods = async () => {
-	console.log("loadMoreGoods triggered. ", loading.value, hasMore.value)
+	console.log("loadMoreGoods triggered. ", loading.value, hasMore.value, pageId.value)
 	if (loading.value || !hasMore.value) {
 		return
 	}
 
 	loading.value = true
-
-	pageId.value += 1
+	const previousPage = pageId.value
+	pageId.value = previousPage + 1
 
 	try {
 		if (current_tab.value === 0) {
@@ -854,6 +853,7 @@ const loadMoreGoods = async () => {
 		}
 	} catch (error) {
 		console.log('加载更多商品失败:', error)
+		pageId.value = previousPage
 	} finally {
 		loading.value = false
 	}
@@ -869,7 +869,7 @@ const checkGoodsListBottom = () => {
 		.select('.goods-list-scroll')
 		.boundingClientRect((rect: any) => {
 			const windowHeight = uni.getWindowInfo().windowHeight
-			if (rect && rect.bottom <= windowHeight + 40) {
+			if (rect && rect.bottom <= windowHeight + 120) {
 				loadMoreGoods()
 			}
 		})
@@ -881,19 +881,42 @@ onReachBottom(() => {
 	loadMoreGoods()
 })
 
-// onPullDownRefresh 生命周期
-onPullDownRefresh(() => {
+// 刷新当前选中的类目，并从第一页重新加载
+const refreshCurrentCategory = async () => {
+	if (loading.value) return
 	loading.value = true
-	isnothing.value = false
+	pageId.value = 1
+	hasMore.value = true
+	goods_list.value = []
+	showRefreshButton.value = false
+	try {
+		if (current_tab.value === 0) {
+			await fetchGuessGoods()
+		} else {
+			await fetchTabGoods(current_tab.value)
+		}
+	} catch (error) {
+		console.log('刷新当前类目失败:', error)
+	} finally {
+		loading.value = false
+	}
+}
 
-	setTimeout(() => {
-		uni.stopPullDownRefresh()
-	}, 1000)
+// 原生下拉刷新和页面内刷新按钮使用相同逻辑
+onPullDownRefresh(async () => {
+	await refreshCurrentCategory()
+	uni.stopPullDownRefresh()
 })
 
 // onPageScroll 生命周期
 onPageScroll((e: any) => {
 	console.log("scroll page: ", e);
+	const previousScrollTop = scrollTop.value
+	if (e.scrollTop < previousScrollTop - 2) {
+		showRefreshButton.value = true
+	} else if (e.scrollTop > previousScrollTop + 2) {
+		showRefreshButton.value = false
+	}
 	// console.log("吸顶距离：\n",this.searchBarTop)
 
 	if (e.scrollTop > navBarHeight.value) {
@@ -1089,6 +1112,110 @@ onBackPress(() => {
 
 
 <style lang="scss">
+.goods-waterfall {
+	display: flex;
+	align-items: flex-start;
+	width: 100%;
+	padding: 20rpx 20rpx 0;
+	box-sizing: border-box;
+}
+
+.goods-waterfall__column {
+	display: flex;
+	width: calc(50% - 10rpx);
+	flex: 0 0 calc(50% - 10rpx);
+	flex-direction: column;
+	margin-right: 20rpx;
+}
+
+.goods-waterfall__column:last-child {
+	margin-right: 0;
+}
+
+.goods-card {
+	width: 100%;
+	margin-bottom: 20rpx;
+	overflow: hidden;
+	border-radius: 20rpx;
+	background: #fff;
+}
+
+.goods-card__image {
+	display: block;
+	width: 100%;
+	background: #f5f5f5;
+}
+
+.goods-card__content {
+	padding: 16rpx;
+}
+
+.goods-card__title {
+	display: -webkit-box;
+	overflow: hidden;
+	font-size: 27rpx;
+	line-height: 1.45;
+	color: #303133;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.goods-card__meta,
+.goods-card__footer,
+.goods-card__shop {
+	display: flex;
+	align-items: center;
+}
+
+.goods-card__meta {
+	margin-top: 12rpx;
+	font-size: 21rpx;
+}
+
+.goods-card__highlight,
+.goods-card__price {
+	color: #f56c6c;
+	font-weight: 700;
+}
+
+.goods-card__sales {
+	margin-left: 10rpx;
+	color: #888;
+}
+
+.goods-card__footer {
+	justify-content: space-between;
+	margin-top: 14rpx;
+}
+
+.goods-card__price-label {
+	font-size: 21rpx;
+	color: #606266;
+}
+
+.goods-card__price {
+	font-size: 29rpx;
+}
+
+.goods-card__shop {
+	max-width: 45%;
+	font-size: 19rpx;
+	color: #888;
+}
+
+.goods-card__shop text {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.goods-card__source {
+	width: 34rpx;
+	height: 34rpx;
+	flex-shrink: 0;
+	margin-left: 6rpx;
+}
+
 .search-sticky {
 	// height: 100%;
 	// line-height: 100%;
@@ -1123,6 +1250,22 @@ onBackPress(() => {
 .search-bar {
 	margin-top: 8rpx;
 	background-color: rgba(255,0,0,0.0);
+}
+
+.home-refresh {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 64rpx;
+	margin: 0 16rpx 8rpx;
+	border-radius: 12rpx;
+	background-color: #fff;
+	color: #f56c6c;
+	font-size: 25rpx;
+}
+
+.home-refresh text {
+	margin-left: 8rpx;
 }
 
 .ecomm-menu {
