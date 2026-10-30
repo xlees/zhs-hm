@@ -2,8 +2,8 @@
     "name" : "甄慧省",
     "appid" : "__UNI__5E17AC8",
     "description" : "一款基于deepseek、可以帮你省钱&赚钱的智能购物领券助手",
-    "versionName" : "1.0.7",
-    "versionCode" : 107,
+    "versionName" : "1.0.8",
+    "versionCode" : 108,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -49,7 +49,9 @@
                 "abiFilters" : [ "armeabi-v7a", "arm64-v8a" ],
                 "excludePermissions" : [
                     "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>"
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>"
                 ],
                 "targetSdkVersion" : 30
             },
